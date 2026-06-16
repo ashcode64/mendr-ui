@@ -1,5 +1,7 @@
 import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from "react";
+import emailjs from "@emailjs/browser";
 import { colors, palette, surfaces, glass, brass, brassRings, withBrassRing, sectionSceneStyle } from "./design-tokens";
+import { emailjsConfig } from "./emailjs-config";
 import { ScrollAtmosphereProvider, useAtmosphere } from "./components/ScrollAtmosphere";
 
 // Neumorphic shadows derived from primary base #DCEFF8
@@ -1538,9 +1540,12 @@ function AudienceSideCard({ variant, title, description, bullets, bulletAccent =
 function Contact() {
   const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(false);
   const [focused, setFocused] = useState(null);
   const stageRef = useRef(null);
   const formCardRef = useRef(null);
+  const lockedCardSizeRef = useRef(null);
 
   useLayoutEffect(() => {
     if (submitted) return undefined;
@@ -1563,6 +1568,25 @@ function Contact() {
     };
   }, [submitted]);
 
+  const lockCardSize = () => {
+    const form = formCardRef.current;
+    const stage = stageRef.current;
+    if (!form || !stage) return;
+    lockedCardSizeRef.current = {
+      width: form.offsetWidth,
+      height: form.offsetHeight,
+    };
+    stage.style.setProperty("--contact-card-w", `${lockedCardSizeRef.current.width}px`);
+    stage.style.setProperty("--contact-card-h", `${lockedCardSizeRef.current.height}px`);
+  };
+
+  const handleNewMessage = () => {
+    setSubmitted(false);
+    setSendError(false);
+    setForm({ name: "", email: "", company: "", message: "" });
+    lockedCardSizeRef.current = null;
+  };
+
   const inputStyle = (field) => ({
     width: "100%", boxSizing: "border-box",
     background: glass.carveBg,
@@ -1579,9 +1603,29 @@ function Contact() {
     caretColor: colors.textDark,
   });
 
-  const handleSubmit = () => {
-    if (!form.name || !form.email) return;
-    setSubmitted(true);
+  const handleSubmit = async () => {
+    if (!form.name || !form.email || sending) return;
+    setSending(true);
+    setSendError(false);
+    try {
+      await emailjs.send(
+        emailjsConfig.serviceId,
+        emailjsConfig.templateId,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          company: form.company || "—",
+          message: form.message || "—",
+        },
+        emailjsConfig.publicKey,
+      );
+      lockCardSize();
+      setSubmitted(true);
+    } catch {
+      setSendError(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -1604,41 +1648,53 @@ function Contact() {
           </div>
         </FadeIn>
 
-        {submitted ? (
-          <FadeIn>
-            <div className="contact-cards-stage contact-cards-stage--submitted">
-              <GlassWrap>
-              <NeuCard surface="glass" style={{ padding: "60px 40px", textAlign: "center", position: "relative", zIndex: 1 }}>
-                <DialOrnament size={72} accent zone="glass" />
-                <h3 style={{
-                  fontSize: "24px", fontWeight: 400, color: colors.textDark,
-                  margin: "24px 0 12px",
-                }}>Message received.</h3>
-                <p style={{ fontSize: "16px", color: colors.textMid, lineHeight: 1.7, margin: 0 }}>
-                  We'll be in touch within one business day.
-                </p>
-              </NeuCard>
-              </GlassWrap>
-            </div>
-          </FadeIn>
-        ) : (
-          <FadeIn delay={0.1}>
-            <div className="contact-cards-stage" ref={stageRef}>
-              <AudienceSideCard
-                variant="teams"
-                title="For engineering teams"
-                description="Stop losing Sundays to schema incidents. mendr sits in your gateway, watches for contract drift, and gives your team a one-click fix before customers notice anything is wrong."
-                bullets={ENGINEERING_BULLETS}
-                bulletAccent="accent"
-              />
+        <FadeIn delay={0.1}>
+          <div className="contact-cards-stage" ref={stageRef}>
+            <AudienceSideCard
+              variant="teams"
+              title="For engineering teams"
+              description="Stop losing Sundays to schema incidents. mendr sits in your gateway, watches for contract drift, and gives your team a one-click fix before customers notice anything is wrong."
+              bullets={ENGINEERING_BULLETS}
+              bulletAccent="accent"
+            />
 
-              <div className="contact-form-card" ref={formCardRef}>
-                <GlassWrap>
-                <NeuCard surface="glass" style={{
-                  padding: "40px",
-                  display: "flex", flexDirection: "column", gap: "20px",
-                  position: "relative",
-                }}>
+            <div className="contact-form-card" ref={formCardRef}>
+              <GlassWrap>
+              <NeuCard surface="glass" style={{
+                padding: "40px",
+                display: "flex",
+                flexDirection: "column",
+                gap: submitted ? 0 : "20px",
+                position: "relative",
+                boxSizing: "border-box",
+                ...(submitted ? {
+                  height: "var(--contact-card-h, auto)",
+                  minHeight: "var(--contact-card-h, auto)",
+                } : {}),
+              }}>
+                {submitted ? (
+                  <div className="contact-success-body">
+                    <DialOrnament size={72} accent zone="glass" />
+                    <h3 style={{
+                      fontSize: "24px", fontWeight: 400, color: colors.textDark,
+                      margin: "24px 0 12px",
+                    }}>Message received.</h3>
+                    <p style={{
+                      fontSize: "16px", color: colors.textMid, lineHeight: 1.7,
+                      margin: "0 0 28px", maxWidth: 360,
+                    }}>
+                      We'll be in touch within one business day.
+                    </p>
+                    <NeuButton
+                      variant="primary"
+                      onClick={handleNewMessage}
+                      style={{ padding: "14px 36px" }}
+                    >
+                      Send a new message
+                    </NeuButton>
+                  </div>
+                ) : (
+                  <>
                   <div className="grid-2">
                     <div>
                       <label style={{ display: "block", fontSize: "12px", fontWeight: 500, color: colors.textMuted, marginBottom: "8px", letterSpacing: "0.06em", textTransform: "uppercase" }}>Name</label>
@@ -1685,23 +1741,33 @@ function Contact() {
                       onBlur={() => setFocused(null)}
                     />
                   </div>
-                  <NeuButton variant="primary" onClick={handleSubmit} style={{ alignSelf: "flex-start", padding: "14px 36px" }}>
-                    Send message
+                  <NeuButton
+                    variant="primary"
+                    onClick={handleSubmit}
+                    style={{ alignSelf: "flex-start", padding: "14px 36px", opacity: sending ? 0.7 : 1 }}
+                  >
+                    {sending ? "Sending…" : "Send message"}
                   </NeuButton>
-                </NeuCard>
-                </GlassWrap>
-              </div>
-
-              <AudienceSideCard
-                variant="investors"
-                title="For investors"
-                description="The service mesh market is $6B and growing. Every enterprise with microservices has this problem. mendr is the first product to bring AI-driven, human-approved self-healing to the API contract layer."
-                bullets={INVESTOR_BULLETS}
-                bulletAccent="blue"
-              />
+                  {sendError && (
+                    <p style={{ fontSize: "13px", color: "#c0392b", margin: 0 }}>
+                      Something went wrong. Please try again.
+                    </p>
+                  )}
+                  </>
+                )}
+              </NeuCard>
+              </GlassWrap>
             </div>
-          </FadeIn>
-        )}
+
+            <AudienceSideCard
+              variant="investors"
+              title="For investors"
+              description="The service mesh market is $6B and growing. Every enterprise with microservices has this problem. mendr is the first product to bring AI-driven, human-approved self-healing to the API contract layer."
+              bullets={INVESTOR_BULLETS}
+              bulletAccent="blue"
+            />
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
@@ -1786,6 +1852,16 @@ function AppContent() {
         .contact-cards-stage--submitted {
           min-height: auto;
           max-width: 640px;
+        }
+
+        .contact-success-body {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          width: 100%;
         }
 
         .contact-form-card {
