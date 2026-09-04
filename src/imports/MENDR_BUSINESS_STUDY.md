@@ -90,7 +90,7 @@ This document is the master reference for any organization evaluating Mendr: exe
 
 Mendr exists because the industry has optimized for two incomplete answers:
 
-- **Detection without repair.** Application performance monitoring, log aggregation, and distributed tracing excel at telling operators that `inventory-service` returned 400 when calling `shipping-service` with field `mag_sent` instead of `tag_sent`. They do not fix the call. Engineers still write patches, run CI, obtain approvals, deploy, and hope the blast radius is contained.
+- **Detection without repair.** Application performance monitoring, log aggregation, and distributed tracing excel at telling operators that `inventory-service` returned 400 when calling `shipping-service` with field `tag_id` instead of `tag_sent`. They do not fix the call. Engineers still write patches, run CI, obtain approvals, deploy, and hope the blast radius is contained.
 - **Routing without semantics.** API gateways and service meshes excel at TLS termination, load balancing, authentication, and rate limiting. They were not designed to rename a field, coerce a type, inject a default, or override a broken upstream route based on a diagnosed contract violation — safely, reversibly, and at streaming JSON throughput.
 
 Mendr closes the gap with a **self-healing layer** that is neither a dashboard nor a passive proxy. It is an active remediation engine governed by policy.
@@ -340,7 +340,7 @@ Mendr delivers differentiated value across the executive and engineering hierarc
 
 Chief technology officers care about **incident frequency, mean time to recovery, and engineering velocity**. Integration-class P1 incidents are especially painful because they rarely implicate a single team. Producer and consumer both point fingers; the gateway layer often has the clearest view of the mismatch but historically no authority to fix it.
 
-Mendr gives the CTO a governed mechanism to **stop emergency redeploys for transient contract mismatches**. When inventory renames `mag_sent` to `tag_sent` but shipping still expects the old field, Mendr proposes a `move` or `rename` MendrScript program. After approval, the edge transforms payloads on the `/ship` route. Customers keep shipping while teams schedule the proper upstream fix.
+Mendr gives the CTO a governed mechanism to **stop emergency redeploys for transient contract mismatches**. When inventory renames `tag_id` to `tag_sent` but shipping still expects the old field, Mendr proposes a `move` or `rename` MendrScript program. After approval, the edge transforms payloads on the `/ship` route. Customers keep shipping while teams schedule the proper upstream fix.
 
 The audit trail (`audit_log`, rule-engine `/api/rules/audit`, dashboard `/audit`) satisfies compliance questions: who approved what patch, when, for which route, with what verification proof stored in `transform_programs`.
 
@@ -399,11 +399,11 @@ Each use case follows the pattern: **business scenario → edge detection catego
 
 ### Use case 1: Field rename drift (SCHEMA_MISMATCH)
 
-**Scenario:** The inventory team deploys a schema change renaming outbound shipment field `mag_sent` to `tag_sent`. The shipping service validation still requires `mag_sent`. Every inventory→shipping `POST /ship` returns HTTP 400.
+**Scenario:** The inventory team deploys a schema change renaming outbound shipment field `tag_id` to `tag_sent`. The shipping service validation still requires `tag_id`. Every inventory→shipping `POST /ship` returns HTTP 400.
 
 **Detection:** Edge logs 400 response; `classify_failure` → `SCHEMA_MISMATCH`. Deduped failure report includes request/response payloads (PII-redacted) and route template.
 
-**Diagnosis:** AI analysis compares payload against registered OpenAPI contracts for both services. ErrorSignature localizes jsonPath `/mag_sent`. MendrScript proposal: `move` from `/mag_sent` to `/tag_sent` or `rename` at parent level depending on structure. Minimizer may collapse redundant op sequences (roadmap: unified relocate fusion).
+**Diagnosis:** AI analysis compares payload against registered OpenAPI contracts for both services. ErrorSignature localizes jsonPath `/tag_id`. MendrScript proposal: `move` from `/tag_id` to `/tag_sent` or `rename` at parent level depending on structure. Minimizer may collapse redundant op sequences (roadmap: unified relocate fusion).
 
 **Approval:** Safety gate → `PENDING_APPROVAL`. Operator reviews diff simulation in dashboard, approves.
 
@@ -1588,7 +1588,7 @@ POST http://localhost:8080/api/gateway/proxy
   "targetService": "shipping-service",
   "endpoint": "/ship",
   "method": "POST",
-  "payload": { "mag_sent": true }
+  "payload": { "tag_id": true }
 }
 ```
 
@@ -2115,7 +2115,7 @@ A: Document assumes commercial deployment; licensing strategy is a business deci
 
 ### Case study A — Field rename during peak traffic
 
-A national retailer operates `inventory-service` and `shipping-service` as separate deploy units under different team on-call rotations. Inventory ships a performance optimization that renames the boolean shipment flag from `mag_sent` to `tag_sent` in the outbound JSON body. The change passes unit tests within inventory but shipping-service validation still requires `mag_sent` on `POST /ship`.
+A national retailer operates `inventory-service` and `shipping-service` as separate deploy units under different team on-call rotations. Inventory ships a performance optimization that renames the boolean shipment flag from `tag_id` to `tag_sent` in the outbound JSON body. The change passes unit tests within inventory but shipping-service validation still requires `tag_id` on `POST /ship`.
 
 **Timeline without Mendr:**
 
@@ -2130,7 +2130,7 @@ A national retailer operates `inventory-service` and `shipping-service` as separ
 
 - T+0: Deploy completes; Mendr edge proxies calls
 - T+2m: Edge logs 400 SCHEMA_MISMATCH; deduped failure to control plane
-- T+4m: AI analysis proposes MendrScript move `/mag_sent` → `/tag_sent` with simulation diff
+- T+4m: AI analysis proposes MendrScript move `/tag_id` → `/tag_sent` with simulation diff
 - T+8m: On-call reviews in dashboard; approves
 - T+9m: Snapshot sync version 11 applied on edge (observed in hybrid test deployment)
 - T+10m: Checkout error rate normalizes; customers unaffected after brief window
@@ -2803,7 +2803,7 @@ This walkthrough illustrates the inventory→shipping field rename scenario docu
 **Initial failure payload (request body):**
 
 ```json
-{ "orderId": "ORD-123", "mag_sent": true, "warehouse": "WEST-1" }
+{ "orderId": "ORD-123", "tag_id": true, "warehouse": "WEST-1" }
 ```
 
 **Shipping service expectation (from OpenAPI contract):**
@@ -2815,7 +2815,7 @@ This walkthrough illustrates the inventory→shipping field rename scenario docu
 **ErrorSignature assembled:**
 
 - category: SCHEMA_MISMATCH
-- jsonPath: /mag_sent
+- jsonPath: /tag_id
 - changeType: FIELD_MISSING or FIELD_RENAME depending on validator message
 - method: POST
 - endpoint template: /ship
@@ -2826,7 +2826,7 @@ This walkthrough illustrates the inventory→shipping field rename scenario docu
 {
   "schemaVersion": "mendrscript/v1",
   "ops": [
-    { "op": "move", "from": "/mag_sent", "to": "/tag_sent" }
+    { "op": "move", "from": "/tag_id", "to": "/tag_sent" }
   ]
 }
 ```

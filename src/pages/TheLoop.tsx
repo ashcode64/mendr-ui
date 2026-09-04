@@ -117,7 +117,7 @@ const tabContent: Record<TabId, React.ReactNode> = {
             <div className="text-muted ml-4">side: <span className="text-brand">request</span></div>
             <div className="text-muted mt-1">ops:</div>
             <div className="text-muted ml-4">- op: <span className="text-success">rename</span></div>
-            <div className="text-muted ml-6">from: <span className="text-error">/mag_sent</span></div>
+            <div className="text-muted ml-6">from: <span className="text-error">/tag_id</span></div>
             <div className="text-muted ml-6">to: <span className="text-success">/tag_sent</span></div>
             <div className="text-cream mt-3 text-[10px]"># Minimized: 1 op (from 3 candidate ops)</div>
             <div className="text-cream text-[10px]"># Verified: Java + Lua parity ✓</div>
@@ -201,7 +201,7 @@ const tabContent: Record<TabId, React.ReactNode> = {
             </div>
           </div>
           {[
-            { route: 'inventory→shipping POST /ship', op: 'rename /mag_sent → /tag_sent', confidence: 94, label: 'High confidence' },
+            { route: 'inventory→shipping POST /ship', op: 'rename /tag_id → /tag_sent', confidence: 94, label: 'High confidence' },
             { route: 'payment→billing POST /charge', op: 'coerce /amount string→number', confidence: 71, label: 'Moderate — review required' },
           ].map((item, i) => (
             <div key={i} className="px-5 py-4 border-b border-overlay last:border-0">
@@ -284,7 +284,7 @@ const tabContent: Record<TabId, React.ReactNode> = {
           <div className="text-muted">Request arrives:</div>
           <div className="bg-error/10 border border-error/20 rounded p-3 mt-1 mb-3">
             <div className="text-error">POST /ship</div>
-            <div className="text-muted">{"{"} "mag_sent": "ORD-1729", ... {"}"}</div>
+            <div className="text-muted">{"{"} "tag_id": "ORD-1729", ... {"}"}</div>
           </div>
           <div className="text-muted">transform.apply_program() executes rename op:</div>
           <div className="text-muted mt-1 ml-2">{"{"} "tag_sent": "ORD-1729", ... {"}"}</div>

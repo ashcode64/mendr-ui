@@ -4,7 +4,7 @@ import HeroSpotlight from '../components/HeroSpotlight'
 interface Props { navigate: NavigateFn }
 
 const failureCategories = [
-  { category: 'SCHEMA_MISMATCH', symptom: 'Unknown field, wrong type, validation 400', impact: 'Order submission fails; inventory sync breaks', example: 'mag_sent renamed to tag_sent' },
+  { category: 'SCHEMA_MISMATCH', symptom: 'Unknown field, wrong type, validation 400', impact: 'Order submission fails; inventory sync breaks', example: 'tag_id renamed to tag_sent' },
   { category: 'RESPONSE_MISMATCH', symptom: 'Downstream response shape differs from contract', impact: 'Client parsers fail; mobile apps crash', example: 'Extra nesting breaks JSON parser' },
   { category: 'ROUTING', symptom: 'Wrong host, DNS failure, 502/503', impact: 'Traffic black-holed; cascading retries', example: 'Pod decommissioned, registry stale' },
   { category: 'CORS', symptom: 'Browser or gateway blocks cross-origin', impact: 'Frontend features silently fail', example: 'Security team adds CORS restriction' },
@@ -162,7 +162,7 @@ export default function Problem({ navigate }: Props) {
                 <h3 className="font-semibold text-on-surface">Detection without repair</h3>
               </div>
               <p className="text-sm text-dim leading-relaxed">
-                APM, log aggregation, distributed tracing — excellent at telling operators that <span className="font-mono text-xs bg-overlay px-1 rounded">inventory→shipping</span> returned 400 when field <span className="font-mono text-xs bg-overlay px-1 rounded">mag_sent</span> was expected. They do not fix the call.
+                APM, log aggregation, distributed tracing — excellent at telling operators that <span className="font-mono text-xs bg-overlay px-1 rounded">inventory→shipping</span> returned 400 when field <span className="font-mono text-xs bg-overlay px-1 rounded">tag_id</span> was expected. They do not fix the call.
               </p>
             </div>
 

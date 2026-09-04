@@ -39,7 +39,7 @@ export default function DeveloperExperience({ navigate }: Props) {
         <div>
           <div className="text-[10px] font-semibold text-dim uppercase tracking-wide mb-2">Recent heals</div>
           {[
-            { time: '2m ago', route: 'inventory→shipping', op: 'rename /mag_sent', status: 'healed' },
+            { time: '2m ago', route: 'inventory→shipping', op: 'rename /tag_id', status: 'healed' },
             { time: '1h ago', route: 'payment→billing', op: 'coerce /amount', status: 'healed' },
             { time: '3h ago', route: 'bff→catalog', op: 'CORS allow', status: 'healed' },
           ].map((row, i) => (
@@ -58,7 +58,7 @@ export default function DeveloperExperience({ navigate }: Props) {
       <div className="p-5 space-y-3">
         <div className="text-[10px] font-semibold text-dim uppercase tracking-wide">Pending approval — 2 proposals</div>
         {[
-          { route: 'inventory→shipping POST /ship', op: 'rename /mag_sent → /tag_sent', confidence: 94, label: 'High' },
+          { route: 'inventory→shipping POST /ship', op: 'rename /tag_id → /tag_sent', confidence: 94, label: 'High' },
           { route: 'payment→billing POST /charge', op: 'coerce /amount string→number', confidence: 71, label: 'Moderate' },
         ].map((item, i) => (
           <div key={i} className="bg-surface border border-rule rounded-xl p-4">
@@ -97,7 +97,7 @@ export default function DeveloperExperience({ navigate }: Props) {
               <pre className="font-mono text-[9px] text-[#1E3A5F] bg-white/50 rounded p-2 whitespace-pre">
 {`ops:
   - op: rename
-    from: /mag_sent
+    from: /tag_id
     to: /tag_sent
   - op: remove
     path: /legacy_id`}

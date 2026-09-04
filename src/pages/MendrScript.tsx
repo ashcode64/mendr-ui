@@ -136,7 +136,7 @@ export default function MendrScript({ navigate }: Props) {
                 code: `schemaVersion: mendrscript/v1
 ops:
   - op: rename
-    from: /mag_sent
+    from: /tag_id
     to: /tag_sent`,
               },
               {

@@ -107,7 +107,7 @@ export default function Home({ navigate }: Props) {
                     <p className="text-xs text-dim mt-0.5">
                       <span className="font-mono text-brand">inventory→shipping POST /ship</span>
                       {' '}— field rename{' '}
-                      <span className="font-mono bg-error/15 text-error px-1 rounded">mag_sent</span>
+                      <span className="font-mono bg-error/15 text-error px-1 rounded">tag_id</span>
                       {' '}→{' '}
                       <span className="font-mono bg-success/20 text-success px-1 rounded">tag_sent</span>
                       {' '}applied, traffic restored.

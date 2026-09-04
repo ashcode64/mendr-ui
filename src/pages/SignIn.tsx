@@ -63,7 +63,7 @@ export default function SignIn({ navigate }: Props) {
             </div>
             <div className="space-y-2.5">
               {[
-                { time: '2m ago', route: 'inventory→shipping', op: 'rename /mag_sent → /tag_sent', badge: 'bg-sky/30 text-sky-ink' },
+                { time: '2m ago', route: 'inventory→shipping', op: 'rename /tag_id → /tag_sent', badge: 'bg-sky/30 text-sky-ink' },
                 { time: '1h ago', route: 'payment→billing', op: 'coerce /amount string→number', badge: 'bg-cream/30 text-cream-ink' },
                 { time: '3h ago', route: 'bff→catalog', op: 'CORS allow origin', badge: 'bg-success/20 text-success' },
               ].map((item, i) => (

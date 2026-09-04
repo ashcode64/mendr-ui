@@ -10,15 +10,15 @@ const useCases = [
     title: 'Field rename drift',
     category: 'SCHEMA_MISMATCH',
     impact: 'Every checkout fails',
-    scenario: 'The inventory team deploys a schema change renaming outbound field mag_sent to tag_sent. Shipping validation still requires the old name. Every inventory→shipping POST /ship returns HTTP 400.',
+    scenario: 'The inventory team deploys a schema change renaming outbound field tag_id to tag_sent. Shipping validation still requires the old name. Every inventory→shipping POST /ship returns HTTP 400.',
     detection: 'Edge logs 400; classify_failure → SCHEMA_MISMATCH. Deduped failure report includes request/response payloads (PII-redacted) and route template.',
-    diagnosis: 'AI compares payload against OpenAPI contracts for both services. ErrorSignature localizes jsonPath /mag_sent. MendrScript proposal: rename from /mag_sent to /tag_sent.',
+    diagnosis: 'AI compares payload against OpenAPI contracts for both services. ErrorSignature localizes jsonPath /tag_id. MendrScript proposal: rename from /tag_id to /tag_sent.',
     heal: 'Snapshot sync version increments. Edge applies request transform via streaming splice.',
     timeToHeal: 'Minutes after approval',
     permanentFix: 'Shipping service updates validation schema; Mendr rule expires via TTL.',
     mendrscript: `ops:
   - op: rename
-    from: /mag_sent
+    from: /tag_id
     to: /tag_sent`,
   },
   {
