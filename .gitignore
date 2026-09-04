@@ -1,30 +1,20 @@
-# ─── Dependencies ─────────────────────────────────────────────────────────────
 node_modules/
-
-# ─── Production build output ──────────────────────────────────────────────────
-build/
 dist/
+build/
+.cache/
+.env*
+.vite/
+vite.config.*.timestamp-*
+*.tsbuildinfo
+*-debug.log*
+logs/
+*.log
+.claude-replay.*
+.tmp-*
 
-# ─── Environment variables (NEVER commit these) ───────────────────────────────
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# ─── Debug logs ───────────────────────────────────────────────────────────────
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# ─── IDE ──────────────────────────────────────────────────────────────────────
-.idea/
-.vscode/
-*.suo
-*.ntvs*
-
-# ─── macOS ────────────────────────────────────────────────────────────────────
-.DS_Store
-
-# ─── Testing ──────────────────────────────────────────────────────────────────
-coverage/
+# Platform-managed agentplat state, not project source. In the
+# client-initiated single-repo workspace layout (make's `Path: "."` spec) the
+# repo root IS the workspace root, so these land inside this repo rather than
+# beside it.
+/.plugins/
+/.opencode-skills/

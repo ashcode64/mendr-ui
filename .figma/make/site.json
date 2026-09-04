@@ -1,0 +1,10 @@
+{
+  "description": "Showcases the complete Mendr product through a visually engaging 15 to 20 page website, enhancing user understanding and driving engagement.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
