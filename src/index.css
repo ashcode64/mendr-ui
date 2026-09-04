@@ -160,7 +160,30 @@ body {
 .delay-400 { animation-delay: 400ms; }
 .delay-500 { animation-delay: 500ms; }
 
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--mendr-rule); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--mendr-dim); }
+/* Transparent scrollbar track — thumb only */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mendr-rule) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background: transparent;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track-piece,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--mendr-rule);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mendr-dim);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
