@@ -142,16 +142,16 @@ export default function GetStarted({ navigate }: Props) {
   return (
     <div>
       {/* Hero */}
-      <HeroSpotlight className="bg-ink py-20 lg:py-32">
+      <HeroSpotlight className="border-b border-rule py-20 lg:py-32">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-cream/10 text-cream text-xs font-semibold px-3.5 py-1.5 rounded-full mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse-slow"></span>
+          <div className="inline-flex items-center gap-2 bg-sky text-sky-ink text-xs font-semibold px-3.5 py-1.5 rounded-full mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse-slow"></span>
             Now in production — August 2026
           </div>
-          <h1 className="font-[family-name:var(--font-display)] font-bold text-[clamp(2.4rem,6vw,4rem)] leading-[1.1] tracking-[-0.03em] text-white mb-5">
+          <h1 className="font-[family-name:var(--font-display)] font-bold text-[clamp(2.4rem,6vw,4rem)] leading-[1.1] tracking-[-0.03em] text-on-surface mb-5">
             Stop treating integration<br />failures as facts of life.
           </h1>
-          <p className="text-lg text-muted leading-relaxed max-w-2xl mx-auto mb-10">
+          <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto mb-10">
             Mendr is deployable today — SaaS hybrid or full on-prem. The complete product loop is implemented and verifiable in the current codebases.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -161,13 +161,13 @@ export default function GetStarted({ navigate }: Props) {
                 e.preventDefault()
                 document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
               }}
-              className="w-full sm:w-auto bg-cream text-ink font-bold px-8 py-4 rounded-xl hover:bg-surface transition-colors text-sm"
+              className="w-full sm:w-auto bg-brand text-white font-semibold px-8 py-4 rounded-xl hover:bg-brand-dark transition-colors text-sm"
             >
               Contact us
             </a>
             <button
               onClick={() => navigate('architecture')}
-              className="w-full sm:w-auto bg-white/10 text-white border border-white/20 font-semibold px-8 py-4 rounded-xl hover:bg-white/15 transition-colors text-sm"
+              className="w-full sm:w-auto border border-rule bg-surface text-on-surface font-semibold px-8 py-4 rounded-xl hover:bg-canvas transition-colors text-sm"
             >
               View architecture docs
             </button>

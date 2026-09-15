@@ -34,7 +34,7 @@ const BOUNDS_PAD = 0.16 // containment padding as a fraction of each dimension
 const ENERGY_FLOOR = 150 // total speed below which we pump the swing (px/s)
 const ENERGY_KICK = 300 // pump impulse magnitude (px/s)
 const MAX_DT = 1 / 30 // clamp frame delta so 60/120Hz behave the same and stalls don't lurch
-const TIME_SCALE = 0.7 // global slow-motion factor (1 = real time); scales all blob movement
+const TIME_SCALE = 0.49 // global slow-motion (was 0.7; −30% speed & acceleration)
 
 // Return-to-home spring (used after the pointer leaves)
 const HOME_K = 30
@@ -439,8 +439,8 @@ export default function HeroSpotlight({ children, className = '' }: Props) {
   }, [])
 
   return (
-    <section ref={sectionRef} className={`relative overflow-hidden ${className}`}>
-      <div className="absolute inset-0 pointer-events-none">
+    <section ref={sectionRef} className={`relative overflow-hidden isolation-isolate ${className}`}>
+      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
         {/* Blue blob: outer element is the rAF-driven positioner, inner is the visual. */}
         <div
           ref={blueRef}
@@ -454,12 +454,11 @@ export default function HeroSpotlight({ children, className = '' }: Props) {
           }}
         >
           <div
-            className="w-full h-full rounded-full"
+            className="hero-blob-visual blob-breathe-blue w-full h-full rounded-full"
             style={{
               background:
                 'radial-gradient(circle, var(--mendr-spotlight-blue) 0%, transparent 70%)',
               filter: 'blur(60px)',
-              animation: 'blob-breathe 7s ease-in-out infinite',
             }}
           />
         </div>
@@ -476,17 +475,16 @@ export default function HeroSpotlight({ children, className = '' }: Props) {
           }}
         >
           <div
-            className="w-full h-full rounded-full"
+            className="hero-blob-visual blob-breathe-cream w-full h-full rounded-full"
             style={{
               background:
                 'radial-gradient(circle, var(--mendr-spotlight-cream) 0%, transparent 70%)',
               filter: 'blur(50px)',
-              animation: 'blob-breathe 9s ease-in-out 2s infinite',
             }}
           />
         </div>
       </div>
-      {children}
+      <div className="relative z-10">{children}</div>
     </section>
   )
 }
