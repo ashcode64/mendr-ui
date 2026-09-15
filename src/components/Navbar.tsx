@@ -4,41 +4,49 @@ import { useTheme } from '../theme'
 
 interface NavbarProps {
   currentPage: PageId
-  navigate: (p: PageId) => void
+  navigate: (p: PageId, opts?: { section?: string }) => void
 }
 
-const navGroups = [
+type NavItem = {
+  id: PageId
+  label: string
+  desc: string
+  section?: string
+}
+
+const navGroups: { label: string; items: NavItem[] }[] = [
   {
     label: 'Product',
     items: [
-      { id: 'problem' as PageId, label: 'The Problem', desc: 'Why APIs break in production' },
-      { id: 'solution' as PageId, label: 'How It Works', desc: 'The four-step healing loop' },
-      { id: 'the-loop' as PageId, label: 'The Loop', desc: 'Detect · Diagnose · Approve · Heal' },
+      { id: 'problem', label: 'The Problem', desc: 'Why APIs break in production' },
+      { id: 'solution', label: 'How It Works', desc: 'The four-step healing loop' },
+      { id: 'the-loop', label: 'The Loop', desc: 'Detect · Diagnose · Approve · Heal' },
     ],
   },
   {
     label: 'Technology',
     items: [
-      { id: 'architecture' as PageId, label: 'Architecture', desc: 'Two-plane design' },
-      { id: 'mendrscript' as PageId, label: 'MendrScript', desc: 'Verified transform DSL' },
-      { id: 'safety' as PageId, label: 'Safety & Trust', desc: 'Human-in-the-loop by design' },
+      { id: 'architecture', label: 'Architecture', desc: 'Two-plane design' },
+      { id: 'mendrscript', label: 'MendrScript', desc: 'Verified transform DSL' },
+      { id: 'safety', label: 'Safety & Trust', desc: 'Human-in-the-loop by design' },
     ],
   },
   {
     label: 'Why Mendr',
     items: [
-      { id: 'use-cases' as PageId, label: 'Use Cases', desc: 'Field rename, CORS, routing...' },
-      { id: 'competitive' as PageId, label: 'Competitive', desc: 'A new category' },
-      { id: 'stakeholders' as PageId, label: 'For Your Team', desc: 'CTO · SRE · Security · Product' },
+      { id: 'use-cases', label: 'Use Cases', desc: 'Field rename, CORS, routing...' },
+      { id: 'competitive', label: 'Competitive', desc: 'A new category' },
+      { id: 'stakeholders', label: 'For Your Team', desc: 'CTO · SRE · Security · Product' },
+      { id: 'get-started', label: 'Contact us', desc: 'Talk about your stack', section: 'contact' },
     ],
   },
   {
     label: 'Platform',
     items: [
-      { id: 'deployment' as PageId, label: 'Deployment', desc: 'SaaS hybrid or full on-prem' },
-      { id: 'developer-experience' as PageId, label: 'Dashboard', desc: 'Operator UI & developer portal' },
-      { id: 'roadmap' as PageId, label: 'Roadmap', desc: "What's shipped, what's next" },
-      { id: 'roi' as PageId, label: 'Business Impact', desc: 'ROI framework' },
+      { id: 'deployment', label: 'Deployment', desc: 'SaaS hybrid or full on-prem' },
+      { id: 'developer-experience', label: 'Developer Portal', desc: 'Operator UI & developer portal' },
+      { id: 'roadmap', label: 'Roadmap', desc: "What's shipped, what's next" },
+      { id: 'roi', label: 'Business Impact', desc: 'ROI framework' },
     ],
   },
 ]
@@ -74,7 +82,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <button className={`flex items-center gap-1 px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors
-                ${group.items.some(i => i.id === currentPage)
+                ${group.items.some(i => i.id === currentPage && !i.section)
                   ? 'text-brand'
                   : 'text-dim hover:text-on-surface'}`}>
                 {group.label}
@@ -86,19 +94,25 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
               {activeDropdown === group.label && (
                 <div className="absolute top-full left-0 pt-2 w-64">
                   <div className="bg-surface border border-rule rounded-xl shadow-lg shadow-black/5 py-2 overflow-hidden">
-                    {group.items.map(item => (
+                    {group.items.map(item => {
+                      const isActive = currentPage === item.id && !item.section
+                      return (
                       <button
-                        key={item.id}
-                        onClick={() => { navigate(item.id); setActiveDropdown(null); }}
+                        key={item.section ? `${item.id}#${item.section}` : item.id}
+                        onClick={() => {
+                          navigate(item.id, item.section ? { section: item.section } : undefined)
+                          setActiveDropdown(null)
+                        }}
                         className={`w-full text-left px-4 py-2.5 transition-colors hover:bg-canvas group
-                          ${currentPage === item.id ? 'bg-brand-subtle/40' : ''}`}
+                          ${isActive ? 'bg-brand-subtle/40' : ''}`}
                       >
-                        <div className={`text-sm font-medium ${currentPage === item.id ? 'text-brand' : 'text-on-surface'}`}>
+                        <div className={`text-sm font-medium ${isActive ? 'text-brand' : 'text-on-surface'}`}>
                           {item.label}
                         </div>
                         <div className="text-xs text-dim mt-0.5">{item.desc}</div>
                       </button>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               )}
@@ -152,16 +166,22 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
               <div className="px-6 pt-3 pb-1 text-[10px] font-semibold text-dim uppercase tracking-widest">
                 {group.label}
               </div>
-              {group.items.map(item => (
+              {group.items.map(item => {
+                const isActive = currentPage === item.id && !item.section
+                return (
                 <button
-                  key={item.id}
-                  onClick={() => { navigate(item.id); setMobileOpen(false); }}
+                  key={item.section ? `${item.id}#${item.section}` : item.id}
+                  onClick={() => {
+                    navigate(item.id, item.section ? { section: item.section } : undefined)
+                    setMobileOpen(false)
+                  }}
                   className={`w-full text-left px-6 py-3 text-sm hover:bg-canvas transition-colors
-                    ${currentPage === item.id ? 'text-brand font-medium' : 'text-on-surface'}`}
+                    ${isActive ? 'text-brand font-medium' : 'text-on-surface'}`}
                 >
                   {item.label}
                 </button>
-              ))}
+                )
+              })}
             </div>
           ))}
         </div>

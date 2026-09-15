@@ -30,9 +30,17 @@ export default function Home({ navigate }: Props) {
               <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse-slow"></span>
               Now in production — August 2026
             </div>
-            <h1 className="font-[family-name:var(--font-display)] font-bold text-[clamp(2.4rem,6vw,4.2rem)] leading-[1.1] tracking-[-0.03em] text-on-surface mb-6 animate-fade-in-up delay-100">
-              Services break in real-time.<br />
-              <span className="text-brand">Mendr fixes them in real-time.</span>
+            <h1 className="font-[family-name:var(--font-display)] font-bold text-center text-[clamp(1.7rem,8vw,2.75rem)] lg:text-[3.4rem] leading-[1.12] tracking-[-0.02em] text-on-surface mb-6 animate-fade-in-up delay-100">
+              <span className="block lg:whitespace-nowrap">
+                <span className="whitespace-nowrap">Services break in</span>
+                <br className="lg:hidden" />{" "}
+                <span className="whitespace-nowrap">real-time.</span>
+              </span>
+              <span className="block text-brand lg:whitespace-nowrap">
+                <span className="whitespace-nowrap">Mendr fixes them in</span>
+                <br className="lg:hidden" />{" "}
+                <span className="whitespace-nowrap">real-time.</span>
+              </span>
             </h1>
             <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto mb-10 animate-fade-in-up delay-200">
               A self-healing API platform that detects integration failures at the gateway layer, proposes verified transforms, waits for human approval, and deploys patches live at the edge — without downtime or emergency redeploys.

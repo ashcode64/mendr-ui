@@ -138,12 +138,30 @@ body {
   100% { transform: translateX(-50%); }
 }
 
-/* Hero spotlight blobs: scale-only breathing. Position is driven by the
+/* Hero spotlight blobs: scale-only breathing (±20%). Position is driven by the
    HeroSpotlight rAF loop via translate3d on the outer positioner, so this
    keyframe must not touch translate. */
 @keyframes blob-breathe {
-  0%, 100% { transform: scale(1); }
+  0%, 100% { transform: scale(0.8); }
   50%      { transform: scale(1.2); }
+}
+
+.hero-blob-visual {
+  will-change: transform;
+}
+
+.blob-breathe-blue {
+  animation: blob-breathe 22s ease-in-out infinite;
+}
+
+.blob-breathe-cream {
+  animation: blob-breathe 28s ease-in-out -4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob-visual {
+    animation: none !important;
+  }
 }
 
 .animate-fade-in-up {

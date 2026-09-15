@@ -38,14 +38,21 @@ export type PageId =
   | 'sign-in'
   | 'sign-up'
 
-export type NavigateFn = (p: PageId) => void
+export type NavigateFn = (p: PageId, opts?: { section?: string }) => void
 
 export default function App() {
   const [page, setPage] = useState<PageId>('home')
 
-  const navigate: NavigateFn = (p) => {
+  const navigate: NavigateFn = (p, opts) => {
     setPage(p)
-    window.scrollTo({ top: 0, behavior: 'instant' })
+    if (opts?.section) {
+      // Wait for the new page to paint before scrolling to the section
+      window.setTimeout(() => {
+        document.getElementById(opts.section!)?.scrollIntoView({ behavior: 'smooth' })
+      }, 50)
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    }
   }
 
   const pages: Record<PageId, React.ReactNode> = {
