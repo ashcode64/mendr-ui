@@ -32,7 +32,7 @@ export default function ROI({ navigate }: Props) {
             Business impact & ROI
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            Populate the worksheet with your organization{"'"}s numbers. Mendr targets the subset of incident costs attributable to repairable contract and routing failures at the API boundary.
+            Populate the worksheet with your organization's numbers. Mendr targets the subset of incident costs attributable to repairable contract and routing failures at the API boundary.
           </p>
         </div>
       </HeroSpotlight>
@@ -52,7 +52,7 @@ export default function ROI({ navigate }: Props) {
                   { label: 'Average hours to restore via deploy/rollback', var: 'H', value: hoursPerIncident, setter: setHoursPerIncident, min: 1, max: 24, step: 0.5, format: (v: number) => `${v} hours` },
                   { label: 'Fully loaded engineer cost per hour ($)', var: 'E', value: engineerCost, setter: setEngineerCost, min: 50, max: 1000, step: 25, format: (v: number) => `$${v}/hr` },
                   { label: 'Revenue at risk per hour during incident ($)', var: 'R', value: revenueAtRisk, setter: setRevenueAtRisk, min: 0, max: 100000, step: 1000, format: (v: number) => `$${v.toLocaleString()}/hr` },
-                  { label: 'Percent of incidents Mendr can heal (0–100)', var: 'P', value: healPercent, setter: setHealPercent, min: 0, max: 100, step: 5, format: (v: number) => `${v}%` },
+                  { label: 'Percent of incidents Mendr can heal (0 to 100)', var: 'P', value: healPercent, setter: setHealPercent, min: 0, max: 100, step: 5, format: (v: number) => `${v}%` },
                 ].map(input => (
                   <div key={input.var}>
                     <div className="flex items-center justify-between mb-2">
@@ -106,14 +106,14 @@ export default function ROI({ navigate }: Props) {
                 <div className="text-xs font-bold text-brand uppercase tracking-wide mb-1">Annual savings potential</div>
                 <div className="font-[family-name:var(--font-display)] font-bold text-4xl text-brand mb-2">{savingsFormatted}</div>
                 <div className="text-xs text-sky-ink">
-                  {healedIncidents} of {incidents} incidents healed ({healPercent}%) — Mendr MTTR ~6 minutes vs {hoursPerIncident}h status quo
+                  {healedIncidents} of {incidents} incidents healed ({healPercent}%). Median time to heal ~6 minutes vs {hoursPerIncident}h status quo.
                 </div>
               </div>
 
               <div className="bg-cream border border-rule rounded-xl p-4">
                 <div className="text-xs font-bold text-cream-ink mb-1">Note on conservative assumptions</div>
                 <div className="text-xs text-cream-ink opacity-80">
-                  This model excludes war-room fatigue, partner onboarding acceleration, compliance confidence value, and LLM cost savings — all material but harder to quantify.
+                  This model excludes war-room fatigue, faster partner onboarding, compliance confidence value, and LLM cost savings. Those matter, but they are harder to quantify.
                 </div>
               </div>
             </div>
@@ -127,15 +127,15 @@ export default function ROI({ navigate }: Props) {
           <div className="text-center mb-10">
             <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Additional Value</div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">
-              Non-quantified benefits
+              Benefits beyond the calculator
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { icon: '😴', title: 'Reduced war-room fatigue', desc: 'On-call engineers approve verified patches instead of debugging from scratch at 3am. Human time spent on signal, not noise.' },
-              { icon: '🤝', title: 'Faster partner onboarding', desc: 'OpenAPI import + virtual patches bridge version gaps during migration windows. Reduce API version negotiation friction.' },
-              { icon: '📋', title: 'Compliance confidence', desc: 'Audit trail for every virtual patch — who approved what, when, with what verification proof. HITL by construction satisfies change management.' },
-              { icon: '💡', title: 'LLM cost control', desc: 'Admission gate prevents runaway inference bills during failure storms. FinOps teams can set per-tenant budgets independently.' },
+              { icon: '😴', title: 'Less war-room fatigue', desc: 'On-call engineers approve verified patches instead of debugging from scratch at 3am. Happy engineers, happy organization.' },
+              { icon: '🤝', title: 'Faster partner onboarding', desc: 'OpenAPI import plus temporary patches bridge version gaps during migration windows. Reduce API version negotiation friction.' },
+              { icon: '📋', title: 'Compliance confidence', desc: 'Audit trail for every virtual patch: who approved what, when, with what verification proof. Human approval by default supports change management.' },
+              { icon: '💡', title: 'LLM cost control', desc: 'Admission gates stop runaway inference bills during failure storms. FinOps can set per-tenant budgets independently.' },
             ].map(item => (
               <div key={item.title} className="border border-rule rounded-xl p-5">
                 <div className="text-2xl mb-3">{item.icon}</div>

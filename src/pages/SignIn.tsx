@@ -20,7 +20,7 @@ export default function SignIn({ navigate }: Props) {
 
   return (
     <div className="min-h-[calc(100vh-60px)] grid lg:grid-cols-2">
-      {/* Left — brand panel */}
+      {/* Left: brand panel */}
       <div className="hidden lg:flex flex-col bg-ink px-14 py-16 relative overflow-hidden">
         {/* Background glow */}
         <div className="absolute inset-0 pointer-events-none">
@@ -51,7 +51,7 @@ export default function SignIn({ navigate }: Props) {
               in real-time.
             </h2>
             <p className="text-muted leading-relaxed text-sm max-w-sm">
-              Detect integration failures at the gateway layer, diagnose with AI, approve in the dashboard, and heal at the edge — without redeploys or downtime.
+              Detect integration failures at the gateway layer, propose a fix, diagnose with AI, get a person to approve, heal at the edge, and restore traffic without redeploying apps or downtime.
             </p>
           </div>
 
@@ -80,7 +80,7 @@ export default function SignIn({ navigate }: Props) {
         </div>
       </div>
 
-      {/* Right — form panel */}
+      {/* Right: form panel */}
       <div className="flex items-center justify-center px-6 py-16 bg-canvas">
         <div className="w-full max-w-[400px]">
           {/* Mobile logo */}

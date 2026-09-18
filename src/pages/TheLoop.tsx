@@ -18,17 +18,17 @@ const tabContent: Record<TabId, React.ReactNode> = {
     <div className="grid lg:grid-cols-2 gap-10 items-start">
       <div>
         <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface mb-4">
-          Edge-local failure classification
+          Catch failures at the gateway
         </h2>
         <p className="text-dim leading-relaxed mb-6">
-          The data plane edge observes every proxied call. In the <span className="font-mono text-xs bg-overlay px-1.5 py-0.5 rounded">log.lua</span> phase, failures trigger on HTTP 4xx/5xx responses or when a streaming splice transform aborts after partial response flush.
+          The data plane edge gateway observes  every proxied call. When a response fails (HTTP 4xx/5xx), or a streaming fix aborts mid-response, Mendr classifies the problem and reports it to the <span className="font-mono text-xs bg-overlay px-1.5 py-0.5 rounded">contol plane</span> without slowing live traffic.
         </p>
         <div className="space-y-4">
           {[
-            { step: '1', title: 'Classify', desc: 'classify_failure() inspects status code, headers, and body to assign SCHEMA_MISMATCH, ROUTING, CORS, SPLICE, or UNKNOWN.' },
-            { step: '2', title: 'Deduplicate', desc: 'Atomic shared-memory add on fail:{source}:{target}:{endpoint}:{category} with a 60-second window. One report per failure window — no telemetry storms.' },
-            { step: '3', title: 'PII scrub', desc: 'pii_redact.lua removes SSN, card numbers, emails, bearer tokens, and password keys before any data leaves the customer network.' },
-            { step: '4', title: 'Report async', desc: 'POST /api/internal/failures fires asynchronously on a timer. No per-request control-plane latency — the proxy path is unaffected.' },
+            { step: '1', title: 'Classify', desc: 'classify_failure() looks at status code, headers, and body, then assigns SCHEMA_MISMATCH, ROUTING, CORS, SPLICE, or UNKNOWN.' },
+            { step: '2', title: 'Deduplicate', desc: 'Same failure on the same route is reported once per 60-second window. That keeps alerts useful instead of flooding your systems with telemetry storms.' },
+            { step: '3', title: 'PII scrub', desc: 'Our pii_redact step removes SSNs, card numbers, emails, bearer tokens, and password keys before any data leaves your network.' },
+            { step: '4', title: 'Report async', desc: 'Our POST /failures endpoint runs on a timer in the background. The proxy path does not wait for the control planeand the traffic moves as usual.' },
           ].map(item => (
             <div key={item.step} className="flex items-start gap-4">
               <div className="w-7 h-7 rounded-full bg-sky flex items-center justify-center flex-shrink-0 font-bold text-xs text-brand">
@@ -85,17 +85,17 @@ const tabContent: Record<TabId, React.ReactNode> = {
     <div className="grid lg:grid-cols-2 gap-10 items-start">
       <div>
         <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface mb-4">
-          AI analysis under admission control
+          AI analysis engine proposes a fix
         </h2>
         <p className="text-dim leading-relaxed mb-6">
-          The <span className="font-mono text-xs bg-overlay px-1.5 py-0.5 rounded">ai-analysis-service</span> consumes failure events from Kafka under strict LLM admission control. Diagnosis routes through a LangGraph conversation engine that produces verified MendrScript — never freeform code.
+          Our Ai analysis engine picks up failure events in the background. AI runs only under strict admission control: rate limits, budgets, and queues. The result is a verified MendrScript program with fixed operations, not freeform code.
         </p>
         <div className="space-y-4 mb-6">
           {[
-            { title: 'Admission control', desc: 'Coalesce duplicate requests (30s Redis TTL), semaphore (default: 2 concurrent LLM calls), 30/min global + 10/min per-tenant budget. Over-budget work is deferred with Kafka ack — never retried into a cost storm.' },
-            { title: 'Error signature assembly', desc: 'Contract context from OpenAPI, service topology from Postgres SCD2 graph, and GraphRAG precedents from pgvector. The LLM sees a constrained, factual context.' },
-            { title: 'VeriGuard synthesis loop', desc: 'LangGraph nodes: propose MendrScript → verify_program → simulate_transform → refine. The loop runs until the program passes simulation against sample payloads.' },
-            { title: 'Rust minimization', desc: 'mendr-minimize applies ddmin necessity, egg EqSat rewrite rules, and prove_minimal subsequence search before presenting the proposal to the operator.' },
+            { title: 'Admission control', desc: 'Duplicate requests are coalesced. Concurrent AI calls are capped. Global and per-tenant budgets limit spend. Over-budget work waits in the queue instead of retrying into a cost spike.' },
+            { title: 'Error signature assembly', desc: 'Mendr gathers contract context from OpenAPI, the service topology graph, and similar past cases. The model sees a constrained, factual brief.' },
+            { title: 'VeriGuard synthesis loop', desc: 'Propose MendrScript → verify_program → simulate_transform → refine. The loop continues until the program passes simulation against sample payloads.' },
+            { title: 'Rust minimization', desc: 'mendr-minimize strips unnecessary steps so the proposal shown to the operator is as small and programmatically simple as it can be while still fixing the failure.' },
           ].map(item => (
             <div key={item.title} className="bg-surface border border-rule rounded-lg p-4">
               <div className="text-sm font-semibold text-on-surface mb-1">{item.title}</div>
@@ -152,7 +152,7 @@ const tabContent: Record<TabId, React.ReactNode> = {
           Human-in-the-loop safety gate
         </h2>
         <p className="text-dim leading-relaxed mb-6">
-          Every proposed heal passes through <span className="font-mono text-xs bg-overlay px-1.5 py-0.5 rounded">SafetyGateService.java</span>. Auto-apply defaults to off — operators review confidence bars and approve or reject from the dashboard.
+          Every proposed heal goes through our safety gate service. Auto-apply is off by default. Operators review confidence bars and approve or reject from the dashboard.
         </p>
 
         <div className="bg-surface border border-rule rounded-xl overflow-hidden mb-5">
@@ -184,7 +184,7 @@ const tabContent: Record<TabId, React.ReactNode> = {
         <div className="bg-success/15 border border-success/40 rounded-lg p-4">
           <div className="text-xs font-bold text-success mb-1">Default: auto-apply OFF</div>
           <div className="text-xs text-success">
-            <span className="font-mono">mendr.conformal.auto-apply-enabled: false</span>. Operators must explicitly opt-in after calibration review. This is a product-level commitment, not a configuration hint.
+            <span className="font-mono">mendr.conformal.auto-apply-enabled: false</span>. Operators opt in after a calibration review. Human approval is the product default.
           </div>
         </div>
       </div>
@@ -193,7 +193,7 @@ const tabContent: Record<TabId, React.ReactNode> = {
         {/* Dashboard mockup */}
         <div className="bg-surface border border-rule rounded-xl overflow-hidden shadow-sm">
           <div className="bg-canvas border-b border-rule px-5 py-3 flex items-center justify-between">
-            <span className="text-xs font-semibold text-on-surface">Pending approval — 2 proposals</span>
+            <span className="text-xs font-semibold text-on-surface">Pending approval: 2 proposals</span>
             <div className="flex gap-2">
               <div className="w-2 h-2 rounded-full bg-error"></div>
               <div className="w-2 h-2 rounded-full bg-warning"></div>
@@ -202,7 +202,7 @@ const tabContent: Record<TabId, React.ReactNode> = {
           </div>
           {[
             { route: 'inventory→shipping POST /ship', op: 'rename /tag_id → /tag_sent', confidence: 94, label: 'High confidence' },
-            { route: 'payment→billing POST /charge', op: 'coerce /amount string→number', confidence: 71, label: 'Moderate — review required' },
+            { route: 'payment→billing POST /charge', op: 'coerce /amount string→number', confidence: 71, label: 'Moderate: review required' },
           ].map((item, i) => (
             <div key={i} className="px-5 py-4 border-b border-overlay last:border-0">
               <div className="flex items-start justify-between mb-2">
@@ -250,18 +250,18 @@ const tabContent: Record<TabId, React.ReactNode> = {
     <div className="grid lg:grid-cols-2 gap-10 items-start">
       <div>
         <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface mb-4">
-          Edge-local patch deployment
+          Apply the patch at the gateway
         </h2>
         <p className="text-dim leading-relaxed mb-6">
-          Approval publishes to Kafka <span className="font-mono text-xs bg-overlay px-1.5 py-0.5 rounded">api.transformations.approved</span>. The rule-engine deploys to Postgres, evicts Redis cache, commits precedents to pgvector, and triggers snapshot republication.
+          After approval, the fix is published to our transformations engine. The rule is stored, caches refresh, and a new config snapshot is prepared for gateways to pick up.
         </p>
 
         <div className="space-y-4 mb-6">
           {[
-            { title: 'Snapshot materialization', desc: 'RouteConfigSnapshotPublisher compiles approved rules into capability-gated JSON snapshots. Edges that lack a capability token receive a snapshot without that field — no silent partial enforcement.' },
-            { title: 'Long-poll sync', desc: 'Edges poll GET /v1/sync/routeconfig?since=&caps= approximately every 30 seconds. The server holds up to 35 seconds before returning 304 (no change) or a new payload.' },
-            { title: 'Local Redis write', desc: 'On sync, the edge writes route configs to mendr:routeconfig:{source}:{target}:{endpoint} with AOF persistence. Rebuilds ingress radixtrees with lock + last-known-good fallback.' },
-            { title: 'Transform execution', desc: 'Request transforms run before upstream call. Response transforms run in body_filter. Streaming splice chosen for structural ops; DOM buffer for UNBOUNDED or conditionals.' },
+            { title: 'Snapshot materialization', desc: 'Approved rules compile into capability-gated JSON snapshots. If a gateway lacks a capability, that field is omitted. Partial enforcement is not silent.' },
+            { title: 'Long-poll sync', desc: 'Gateways poll GET /routeconfig endpoint about every 30 seconds. The server holds the request up to 35 seconds, then returns no change or a new payload transformation rule.' },
+            { title: 'Local Redis write', desc: 'On sync, the gateway writes route configs to local Redis with durable storage, then rebuilds routing tables with a last-known-good fallback.' },
+            { title: 'Transform execution', desc: 'Request transforms run before the upstream call. Response transforms run as the body streams back. Structural fixes can splice in place; complex cases buffer as needed.' },
           ].map(item => (
             <div key={item.title} className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-brand flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -326,7 +326,7 @@ export default function TheLoop({ navigate }: Props) {
             Detect · Diagnose · Approve · Heal
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            Each step has a specific technical implementation. No step is hand-wavy — everything maps to code you can read in the repositories.
+            How Mendr finds an API integration failure, proposes a gateway patch, waits for your approval, and heals traffic.
           </p>
         </div>
       </HeroSpotlight>

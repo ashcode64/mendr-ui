@@ -57,7 +57,7 @@ export default function Footer({ navigate }: FooterProps) {
               <span className="font-[family-name:var(--font-display)] font-bold text-[17px] tracking-tight">mendr</span>
             </div>
             <p className="text-sm text-muted leading-relaxed max-w-[200px]">
-              Self-healing API infrastructure for enterprise teams.
+              Detect, approve, and heal broken API traffic in production.
             </p>
           </div>
 

@@ -10,30 +10,28 @@ const roles = [
     title: 'CTO / VP Engineering',
     icon: '🏗️',
     pain: 'P1 integration incidents erode release confidence',
-    headline: 'Stop emergency redeploys for transient contract mismatches',
+    headline: 'Stop emergency redeploys for temporary contract mismatches',
     outcomes: [
-      'Virtual patches heal contract failures in minutes — permanent fix decoupled from customer impact window',
+      'Temporary patches restore traffic in minutes while teams ship the permanent fix on their timeline',
       'Immutable audit trail satisfies compliance: who approved what patch, when, for which route',
       'Auto-expiring patches ensure virtual fixes never become permanent undocumented adapters',
       'Mean time to recovery for integration-class incidents drops from hours to minutes',
     ],
-    code: 'Four-step loop; auto-expiring rules; /api/rules/audit',
-    stat: { value: 'Hours → minutes', label: 'MTTR for integration class' },
+    stat: { value: 'Hours → minutess', label: 'MTTR for integration class' },
   },
   {
     id: 'sre',
     title: 'Platform Engineering / SRE',
     icon: '⚙️',
     pain: 'Gateway outages during control-plane incidents',
-    headline: 'Degrade gracefully — serve from last-known-good during outages',
+    headline: 'Keep serving from last-known-good during outages',
     outcomes: [
-      'Edge serves from LKG Redis snapshots; Java fallback for cold start',
-      'Periodic full resync every 300 seconds backstops missed deltas',
-      'Ingress radixtree rebuild uses worker lock + LKG — failed rebuild does not advance local version',
-      'Circuit breaker, active healthcheck, proxy_next_upstream retries (5× on 502/503/504)',
-      'Failure dedup at edge prevents telemetry storms during sustained outages',
+      'Edge serves from last-known-good snapshots if the control plane is unreachable',
+      'Periodic full resync every 5 minutes catches missed updates',
+      'Failed config rebuilds do not advance the local version; traffic keeps the last good state',
+      'Circuit breaker, health checks, and upstream retries on 502/503/504',
+      'Failure dedup at the edge prevents telemetry storms during long outages',
     ],
-    code: 'sync_client.lua, MENDR_JAVA_FALLBACK, STALE_ALERT_SEC',
     stat: { value: 'LKG serving', label: 'During control-plane outage' },
   },
   {
@@ -41,16 +39,15 @@ const roles = [
     title: 'Security / GRC',
     icon: '🔐',
     pain: 'AI auto-remediation risk and audit gaps',
-    headline: 'HITL by default, fail-closed edge, audit-ready artifacts',
+    headline: 'Human approval by default, fail-closed edge, audit-ready artifacts',
     outcomes: [
-      'HITL default — auto-apply requires explicit opt-in after calibration review',
-      'Conformal abstention: AI gates itself when confidence interval is wide',
-      'FORCE RLS on Postgres — unset tenant context matches zero rows',
-      'PII scrubbed at edge before failure reports leave customer network',
-      'Conversation engine has no deploy node — prompt injection cannot bypass Java verifier',
+      'Human approval is the default; auto-apply needs explicit opt-in after calibration',
+      'When confidence is low, Mendr abstains and asks an operator',
+      'Database row-level security: no tenant context means no rows returned',
+      'PII scrubbed at the edge before failure reports leave your network',
+      'Chat cannot deploy; prompt injection cannot bypass our code verifier',
       'Append-only audit log for every virtual patch approval and deployment',
     ],
-    code: 'SafetyGateService, docs/SECURITY.md, docs/MULTI_TENANCY.md',
     stat: { value: '0', label: 'LLM-generated code on hot path' },
   },
   {
@@ -60,12 +57,11 @@ const roles = [
     pain: 'Customer-visible broken flows and support ticket spikes',
     headline: 'Restore traffic before customers see failure',
     outcomes: [
-      'Approved heals restore traffic without customer-facing deploy — seconds to minutes after approval',
-      'Dashboard /simulate page for demos and training — pre-built failure scenarios',
-      'End users experience success rates recovering, not "the app is broken" messages',
-      'NPS protected during integration incidents that would otherwise require hours of downtime',
+      'Approved heals restore traffic without a customer-facing deploy, usually within minutes',
+      'Simulate page with pre-built failure scenarios for demos and training',
+      'Users see success rates recover instead of "the app is broken"',
+      'Fewer support spikes during integration incidents that used to mean hours of downtime',
     ],
-    code: 'Edge transform before upstream; /simulate routes',
     stat: { value: '< 2 min', label: 'Typical time-to-heal after approval' },
   },
   {
@@ -73,15 +69,14 @@ const roles = [
     title: 'API / Integration Teams',
     icon: '🔗',
     pain: 'OpenAPI drift across teams and slow onboarding',
-    headline: 'GitOps-first service registry with dry-run diff and portal',
+    headline: 'GitOps-friendly service registry with dry-run and portal',
     outcomes: [
-      'OpenAPI import: POST /api/services/import-openapi (multipart, JSON, from-url)',
-      'Dry-run diff: POST /api/services/import-openapi/dry-run previews changes without write',
-      'Manifest import: POST /api/services/import-manifest for mendr.yaml GitOps workflows',
-      'Developer portal: /api/portal/* for catalog, specs, API keys, usage, AI route config',
-      'Service topology edges accumulate from manifests, OpenAPI, traffic, and code analysis',
+      'Import OpenAPI specs via file, JSON, or URL',
+      'Dry-run preview shows what would change before you write',
+      'Manifest import supports mendr.yaml GitOps workflows',
+      'Developer portal for catalog, specs, API keys, usage, and AI route config',
+      'Service topology builds from manifests, OpenAPI, traffic, and code analysis',
     ],
-    code: 'ServiceRegistryController, /api/portal/, init_v14_service_topology.sql',
     stat: { value: 'GitOps', label: 'Declarative service registration' },
   },
   {
@@ -91,13 +86,12 @@ const roles = [
     pain: 'LLM cost storms during integration incidents',
     headline: 'Inference treated as a gated, metered resource',
     outcomes: [
-      'Coalesce duplicate analyses (30s Redis TTL) — one LLM call per failure window',
-      'Semaphore default: 2 concurrent LLM calls max',
-      'Global 30/min + per-tenant 10/min budgets — over-budget work deferred, never storm-retried',
-      'Defer-with-Kafka-ack prevents runaway costs during incident storms',
-      'Usage metering to Redis: mendr:usage:{tenant}:day:{YYYYMMDD}',
+      'Duplicate analyses coalesce so you get one LLM call per failure window',
+      'Semaphore caps concurrent LLM calls (default: 2)',
+      'Global and per-tenant budgets; over-budget work is deferred, not storm-retried',
+      'Deferred work with Kafka ack prevents runaway cost during incident storms',
+      'Usage metering per tenant per day for FinOps reporting',
     ],
-    code: 'LlmAdmissionControl.java, mendr_analysis_deferred_total metric',
     stat: { value: 'Zero', label: 'LLM retry storms on budget exceed' },
   },
 ]
@@ -115,7 +109,7 @@ export default function Stakeholders({ navigate }: Props) {
             Value by stakeholder
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            Mendr delivers differentiated outcomes across the executive and engineering hierarchy. Every outcome maps to code-backed implementation — not aspirational marketing claims.
+            Mendr delivers differentiated outcomes across the executive and engineering hierarchy. Every outcome maps to code-backed implementation, not aspirational marketing claims.
           </p>
         </div>
       </HeroSpotlight>
@@ -140,7 +134,7 @@ export default function Stakeholders({ navigate }: Props) {
                 </tr>
               </thead>
               <tbody>
-                {roles.map((role, i) => (
+                {roles.map((role) => (
                   <tr key={role.id} className="border-b border-rule-strong last:border-0 hover:bg-overlay/60 transition-colors cursor-pointer" onClick={() => setActiveRole(role)}>
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2">
@@ -150,7 +144,6 @@ export default function Stakeholders({ navigate }: Props) {
                     </td>
                     <td className="px-4 py-3.5 text-xs text-on-surface">{role.pain}</td>
                     <td className="px-4 py-3.5 text-xs text-on-surface">{role.headline}</td>
-                    <td className="px-4 py-3.5 font-mono text-[10px] text-dim">{role.code.split(',')[0]}</td>
                   </tr>
                 ))}
               </tbody>
@@ -217,10 +210,6 @@ export default function Stakeholders({ navigate }: Props) {
                     </div>
                   ))}
                 </div>
-                <div className="bg-canvas border border-rule rounded-lg px-4 py-3">
-                  <div className="text-[10px] font-bold text-dim uppercase tracking-wide mb-1">Code evidence</div>
-                  <div className="font-mono text-xs text-on-surface">{activeRole.code}</div>
-                </div>
               </div>
             </div>
           </div>
@@ -231,7 +220,7 @@ export default function Stakeholders({ navigate }: Props) {
       <section className="py-14 text-center">
         <div className="max-w-xl mx-auto px-6">
           <h2 className="font-[family-name:var(--font-display)] font-bold text-xl tracking-tight text-on-surface mb-3">
-            How does Mendr deploy in your environment?
+            Deploy where your data lives
           </h2>
           <p className="text-sm text-dim mb-6">
             SaaS hybrid, full on-prem, or air-gapped. Mendr meets your infrastructure requirements.

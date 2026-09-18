@@ -4,20 +4,20 @@ import HeroSpotlight from '../components/HeroSpotlight'
 interface Props { navigate: NavigateFn }
 
 const failureCategories = [
-  { category: 'SCHEMA_MISMATCH', symptom: 'Unknown field, wrong type, validation 400', impact: 'Order submission fails; inventory sync breaks', example: 'tag_id renamed to tag_sent' },
-  { category: 'RESPONSE_MISMATCH', symptom: 'Downstream response shape differs from contract', impact: 'Client parsers fail; mobile apps crash', example: 'Extra nesting breaks JSON parser' },
-  { category: 'ROUTING', symptom: 'Wrong host, DNS failure, 502/503', impact: 'Traffic black-holed; cascading retries', example: 'Pod decommissioned, registry stale' },
-  { category: 'CORS', symptom: 'Browser or gateway blocks cross-origin', impact: 'Frontend features silently fail', example: 'Security team adds CORS restriction' },
-  { category: 'SPLICE', symptom: 'Streaming transform abort after partial flush', impact: 'Protocol-aware 502, even on upstream 200', example: 'Large JSON rename at streaming throughput' },
-  { category: 'UNKNOWN', symptom: 'Unclassified errors', impact: 'Requires human triage', example: 'Novel failure signature, no precedent' },
+  { category: 'SCHEMA_MISMATCH', symptom: 'Wrong or missing field, bad type, validation 4xx error', impact: 'Order submission fails; inventory sync breaks', example: 'Field renamed from tag_id to tag_sent' },
+  { category: 'RESPONSE_MISMATCH', symptom: 'Response shape no longer matches what callers expect', impact: 'Apps crash or show blank data', example: 'Extra nesting breaks a JSON parser' },
+  { category: 'ROUTING', symptom: 'Wrong host, DNS failure, 502/503', impact: 'Traffic goes nowhere; retries pile up', example: 'Old server retired, registry still points there' },
+  { category: 'CORS', symptom: 'Browser or gateway blocks a cross-site call', impact: 'A front-end feature quietly stops working', example: 'Security tightens CORS and breaks a legitimate app' },
+  { category: 'SPLICE', symptom: 'A live rewrite stops mid-stream', impact: 'Caller sees an error even when upstream returned OK', example: 'Large JSON rename under heavy traffic' },
+  { category: 'UNKNOWN', symptom: 'Error does not match a known pattern', impact: 'Needs a human to investigate', example: 'Novel failure signature, no precedent' },
 ]
 
 const costs = [
-  { icon: '⏱️', title: 'Engineering opportunity cost', desc: 'Senior engineers in war rooms instead of shipping product. On-call burns time debugging instead of building.' },
-  { icon: '💸', title: 'Revenue leakage', desc: 'Failed checkouts, incomplete shipments, broken signup flows — every minute of downtime converts to lost revenue.' },
+  { icon: '⏱️', title: 'Engineering time', desc: 'Senior engineers in war rooms instead of shipping product. On-call burns time debugging instead of building.' },
+  { icon: '💸', title: 'Lost revenue', desc: 'Failed checkouts, stuck shipments, broken signups. Every minute of downtime costs money.' },
   { icon: '📋', title: 'SLA credits & penalties', desc: 'B2B platforms face contractual uptime guarantees. Integration failures trigger credit obligations and erode trust.' },
-  { icon: '👥', title: 'Customer trust erosion', desc: 'End users experience "the app is broken" without understanding microservices. Trust is hard to rebuild.' },
-  { icon: '⚖️', title: 'Compliance exposure', desc: 'Emergency fixes that bypass change management create audit gaps. PII mishandling risks during rushed deploys.' },
+  { icon: '👥', title: 'Customer trust erosion', desc: 'Users just see "the app is broken." They do not care which microservice drifted. Trust is hard to rebuild.' },
+  { icon: '⚖️', title: 'Compliance risk', desc: 'Emergency hotfixes bypass normal change process and create audit gaps. PII mishandling risks during rushed deploys.' },
 ]
 
 export default function Problem({ navigate }: Props) {
@@ -28,10 +28,10 @@ export default function Problem({ navigate }: Props) {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-4">The Problem</div>
           <h1 className="font-[family-name:var(--font-display)] font-bold text-[clamp(2rem,5vw,3.2rem)] leading-[1.15] tracking-tight text-on-surface mb-5">
-            The steady-state tax of distributed systems
+            The quiet tax of distributed systems
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            When an organization adopts microservices, it inherits a combinatorial integration surface. Every integration is a contract — and contracts drift faster than CI can catch them.
+            When an organization adopts microservices, it inherits a surface of inter-linked services talking to each other. Each link is a shared contract about fields and routes. Those contract drift, and customers feel it before your team does.
           </p>
         </div>
       </HeroSpotlight>
@@ -45,10 +45,10 @@ export default function Problem({ navigate }: Props) {
                 Why this problem never goes away
               </h2>
               <p className="text-dim leading-relaxed mb-6">
-                If <em>N</em> services each expose <em>M</em> endpoints, the potential caller-callee contract pairs grow faster than any team can manually regression-test before every deploy.
+                If N services each expose M endpoints, the number of ways two of them can disagree grows faster than any team can retest by hand before every production release thoroughly.
               </p>
               <p className="text-dim leading-relaxed mb-6">
-                Modern deployment pipelines are fast relative to historical cycles — but they are still slower than production drift:
+                Modern release cycles are faster than they used to be. But, Production state still changes faster:
               </p>
               <ul className="space-y-3">
                 {[
@@ -72,16 +72,16 @@ export default function Problem({ navigate }: Props) {
             {/* Incident timeline */}
             <div className="bg-surface border border-rule rounded-2xl overflow-hidden">
               <div className="bg-error/10 border-b border-error/40 px-6 py-4">
-                <div className="text-sm font-bold text-error">Median incident timeline — integration class</div>
+                <div className="text-sm font-bold text-error">Typical incident timeline — integration class</div>
               </div>
               {[
-                { time: '0:00', label: 'Customer impact begins', note: 'Silent, no alert yet' },
-                { time: '0:08–20', label: 'Alert fires on SLO breach', note: 'Minutes of customer impact already' },
-                { time: '0:25', label: 'On-call assembles, triage starts', note: 'Logs, traces, dashboards opened' },
-                { time: '1:00', label: 'Root cause isolated: contract mismatch', note: 'Not an infra outage — schema drift' },
-                { time: '1:30', label: 'Fix designed, PR opened', note: 'Producer team notified' },
-                { time: '2:30', label: 'CI runs, review obtained', note: 'Testing, approval gates' },
-                { time: '4:00–8:00', label: 'Deploy and verify', note: 'Customers impacted the entire time' },
+                { time: '0:00', label: 'Customers start to feel it', note: 'Still silent; no alert yet' },
+                { time: '0:08-20', label: 'Alert fires on SLO breach', note: 'Minutes of customer impact already' },
+                { time: '0:25', label: 'On-call assembles, triage starts', note: 'Logs, traces, dashboards open' },
+                { time: '1:00', label: 'Root cause isolated: contract mismatch', note: 'Not an infra outage; schema drift' },
+                { time: '1:30', label: 'Fix designed, PR opened', note: 'Owning team notified' },
+                { time: '2:30', label: 'CI runs, Change ticket opened, review obtained', note: 'Testing, approval gates' },
+                { time: '4:00-8:00', label: 'Deploy and verify', note: 'Customers impacted the entire time' },
               ].map((row, i) => (
                 <div key={i} className={`flex items-start gap-4 px-6 py-3.5 border-b border-overlay last:border-0 ${i === 0 ? 'bg-warning/15' : ''}`}>
                   <div className="w-14 flex-shrink-0">
@@ -104,7 +104,7 @@ export default function Problem({ navigate }: Props) {
           <div className="mb-10">
             <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Failure Taxonomy</div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">
-              Six classes of integration failure Mendr addresses
+              Six classes of integration failures that Mendr addresses
             </h2>
           </div>
 
@@ -143,10 +143,10 @@ export default function Problem({ navigate }: Props) {
           <div className="text-center mb-12">
             <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">The Gap</div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl lg:text-[1.9rem] tracking-tight text-on-surface mb-4">
-              The industry solved detection. Nobody solved repair.
+              The industry automated detection. Repair is still manual.
             </h2>
             <p className="text-dim max-w-xl mx-auto">
-              Two incomplete answers dominate the market — and both leave you with an unfixed API call.
+              Two incomplete answers dominate the market, and both leave you with an unfixed API call.
             </p>
           </div>
 
@@ -162,7 +162,7 @@ export default function Problem({ navigate }: Props) {
                 <h3 className="font-semibold text-on-surface">Detection without repair</h3>
               </div>
               <p className="text-sm text-dim leading-relaxed">
-                APM, log aggregation, distributed tracing — excellent at telling operators that <span className="font-mono text-xs bg-overlay px-1 rounded">inventory→shipping</span> returned 400 when field <span className="font-mono text-xs bg-overlay px-1 rounded">tag_id</span> was expected. They do not fix the call.
+                APM, log aggregation, distributed tracing — excellent at telling operators that <span className="font-mono text-xs bg-overlay px-1 rounded">inventory→shipping</span> returned 400 when field <span className="font-mono text-xs bg-overlay px-1 rounded">tag_id</span> was expected. They do not repair the call.
               </p>
             </div>
 
@@ -173,18 +173,18 @@ export default function Problem({ navigate }: Props) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-on-surface">Routing without semantics</h3>
+                <h3 className="font-semibold text-on-surface">Routing without meaning</h3>
               </div>
               <p className="text-sm text-dim leading-relaxed">
-                API gateways and service meshes handle TLS termination, auth, and rate limiting. They were not designed to rename a field, coerce a type, or inject a default based on a diagnosed contract violation — safely and at streaming throughput.
+                Gateways and meshes handle security and traffic volume well. They were not built to rename a field, fix a type, or fill a missing value safely and at streaming throughput when two systems disagree.
               </p>
             </div>
           </div>
 
           <div className="max-w-3xl mx-auto bg-brand-subtle/40 border border-brand/20 rounded-xl p-6 text-center">
-            <div className="text-sm font-semibold text-brand mb-1">Mendr closes the gap</div>
+            <div className="text-sm font-semibold text-brand mb-1">Mendr closes that gap</div>
             <p className="text-sm text-on-surface">
-              A self-healing layer that is neither a dashboard nor a passive proxy — an active remediation engine governed by policy, with verified transforms and human approval.
+              An intelligent runtime layer that combines observability and gateway control with a policy-driven repair engine, applying verified, human-approved temporary patches to production traffic in real time.
             </p>
           </div>
         </div>
@@ -196,7 +196,7 @@ export default function Problem({ navigate }: Props) {
           <div className="text-center mb-12">
             <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Business Impact</div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl lg:text-[1.9rem] tracking-tight text-white">
-              The real cost of integration incidents
+              What these incidents actually cost
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
@@ -218,7 +218,7 @@ export default function Problem({ navigate }: Props) {
             Ready to see the solution?
           </h2>
           <p className="text-dim mb-7">
-            Mendr targets the subset of these costs attributable to repairable contract and routing failures at the API boundary.
+            Mendr focuses on the share of these costs that come from repairable contract and routing breaks at the API boundary.
           </p>
           <button onClick={() => navigate('solution')} className="bg-brand text-white font-semibold px-7 py-3.5 rounded-lg hover:bg-brand-dark transition-colors text-sm">
             See how Mendr fixes it

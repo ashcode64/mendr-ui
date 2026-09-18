@@ -7,37 +7,37 @@ const comparisons = [
   {
     category: 'API Gateways',
     examples: 'Kong · Apigee · AWS API Gateway · Gravitee',
-    theyWin: ['Ecosystem maturity, plugins, marketplace', 'Years of production hardening', 'Extensive auth, quota, transformation plugins'],
-    mendrWins: ['Self-healing loop with AI diagnosis', 'Verified MendrScript + minimizer + conformal gate', 'Failure-driven proposals with precedent learning'],
-    takeaway: 'Mendr can coexist as a specialized healing layer in front of or alongside existing gateways during migration.',
+    theyWin: ['Mature ecosystems, plugins, and marketplaces', 'Years of production hardening', 'Broad auth, quota, and transform plugins'],
+    mendrWins: ['Self-healing loop with AI-assisted diagnosis', 'Verified MendrScript with safety gates before apply', 'Failure-driven proposals that learn from past fixes'],
+    takeaway: 'Mendr can sit in front of or beside your existing gateway as a healing layer during migration.',
   },
   {
     category: 'Service Meshes',
     examples: 'Istio · Linkerd · Cilium · Envoy',
-    theyWin: ['mTLS, traffic shifting — first-class, kube-native', 'Sidecar telemetry hooks', 'Virtual services, subsets for routing'],
-    mendrWins: ['Payload/schema healing meshes cannot perform', 'Contract-aware transforms on JSON bodies', 'Routing override heals + schema rename heals'],
-    takeaway: 'Mesh solves connectivity and policy; Mendr solves semantic contract violations. Complementary, not redundant.',
+    theyWin: ['mTLS and traffic shifting, kube-native', 'Sidecar telemetry hooks', 'Virtual services and subsets for routing'],
+    mendrWins: ['Payload and schema healing meshes do not do', 'Contract-aware transforms on JSON bodies', 'Routing overrides plus schema rename heals'],
+    takeaway: 'Mesh handles connectivity and policy. Mendr handles semantic contract breaks. Complementary, not redundant.',
   },
   {
     category: 'Observability',
     examples: 'Datadog · New Relic · Splunk · Sentry',
-    theyWin: ['Breadth of signals: logs, metrics, traces, RUM', 'ML on telemetry, anomaly detection', 'PagerDuty integrations, on-call workflows'],
-    mendrWins: ['Acts — deploys verified virtual patches', 'Outputs executable MendrScript, not runbooks', 'Reduces MTTR for integration failure class'],
-    takeaway: 'Mendr ingests OTLP but is not replacing APM — it closes the remediation loop APM leaves open.',
+    theyWin: ['Broad signals: logs, metrics, traces, RUM', 'ML on telemetry and anomaly detection', 'PagerDuty integrations and on-call workflows'],
+    mendrWins: ['Deploys verified virtual patches after approval', 'Outputs executable MendrScript, not runbooks', 'Reduces MTTR for integration-class failures'],
+    takeaway: 'Mendr can ingest OTLP. It does not replace APM; it closes the remediation loop APM leaves open.',
   },
   {
     category: 'iPaaS / ESB',
     examples: 'MuleSoft · Boomi · Workato',
-    theyWin: ['Visual mapping, connector catalog (design-time)', 'Orchestration engines for batch/async workflows', 'Enterprise integration COE governance'],
-    mendrWins: ['Runtime in-path healing without replumbing', 'Sub-second heal deploy on live synchronous traffic', 'HITL + MendrScript verification + audit trail'],
-    takeaway: 'iPaaS is upstream/downstream of Mendr — Mendr catches production drift iPaaS models did not anticipate.',
+    theyWin: ['Visual mapping and connector catalogs (design-time)', 'Orchestration for batch and async workflows', 'Enterprise integration COE governance'],
+    mendrWins: ['Runtime in-path healing without replumbing', 'Sub-second heal deploy on live synchronous traffic', 'Human approval, MendrScript verification, and audit trail'],
+    takeaway: 'iPaaS sits upstream or downstream of Mendr. Mendr catches production drift those models did not anticipate.',
   },
   {
     category: 'Contract Testing',
     examples: 'Pact · Optic · Spectral · Schemathesis',
-    theyWin: ['CI contract gates, shift-left prevention', 'PR checks, breaking change detection', 'Developer workflow integration'],
-    mendrWins: ['Production drift healing when CI missed', 'Live traffic context with actual failing payload', 'Runtime safety net for what CI couldn\'t catch'],
-    takeaway: 'Mendr roadmap includes CI contract gates; today Mendr is the production safety net.',
+    theyWin: ['CI contract gates and shift-left prevention', 'PR checks and breaking-change detection', 'Developer workflow integration'],
+    mendrWins: ['Heals production drift when CI missed it', 'Live traffic context with the actual failing payload', 'Runtime safety net for what CI could not catch'],
+    takeaway: 'CI contract gates are on the Mendr roadmap. Today Mendr is the production safety net.',
   },
 ]
 
@@ -52,7 +52,7 @@ export default function Competitive({ navigate }: Props) {
             A new category
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            Integration resilience — the capability to detect, diagnose, and repair broken API traffic in production at the gateway boundary. No existing category delivers this.
+            Detect, diagnose, and repair broken API traffic in production at the gateway. Existing tools cover detection or routing; Mendr closes the repair loop with human approval.
           </p>
         </div>
       </HeroSpotlight>
@@ -75,9 +75,9 @@ export default function Competitive({ navigate }: Props) {
                 <span className="text-xs font-semibold text-dim uppercase tracking-widest">API contract aware</span>
               </div>
               <div className="grid grid-cols-2 gap-0.5 bg-rule rounded-2xl overflow-hidden border border-rule">
-                {/* Q2 — top left */}
+                {/* Q2 top left */}
                 <div className="bg-canvas p-6">
-                  <div className="text-[10px] font-bold text-dim uppercase tracking-widest mb-3">Q2 — Prevention</div>
+                  <div className="text-[10px] font-bold text-dim uppercase tracking-widest mb-3">Q2 · Prevention</div>
                   <div className="space-y-2">
                     {['Pact', 'Spectral', 'Optic'].map(name => (
                       <div key={name} className="bg-surface border border-rule rounded-lg px-3 py-2 text-xs font-medium text-dim">{name}</div>
@@ -85,18 +85,18 @@ export default function Competitive({ navigate }: Props) {
                   </div>
                   <div className="mt-3 text-[10px] text-muted">CI gates · Shift-left · No runtime</div>
                 </div>
-                {/* Q1 — top right — Mendr */}
+                {/* Q1 top right · Mendr */}
                 <div className="bg-sky p-6 relative">
-                  <div className="text-[10px] font-bold text-brand uppercase tracking-widest mb-3">Q1 — Integration Resilience</div>
+                  <div className="text-[10px] font-bold text-brand uppercase tracking-widest mb-3">Q1 · Integration Resilience</div>
                   <div className="bg-brand text-white rounded-xl px-4 py-3 mb-2">
                     <div className="text-sm font-bold">mendr ★</div>
                     <div className="text-[10px] mt-0.5 opacity-75">Live verified healing</div>
                   </div>
                   <div className="text-[10px] text-brand opacity-70 mt-2">Contract-aware · Remediation capable</div>
                 </div>
-                {/* Q3 — bottom left */}
+                {/* Q3 bottom left */}
                 <div className="bg-canvas p-6">
-                  <div className="text-[10px] font-bold text-dim uppercase tracking-widest mb-3">Q3 — Gateways & Meshes</div>
+                  <div className="text-[10px] font-bold text-dim uppercase tracking-widest mb-3">Q3 · Gateways & Meshes</div>
                   <div className="space-y-2">
                     {['Kong', 'Apigee', 'Istio', 'Envoy'].map(name => (
                       <div key={name} className="bg-surface border border-rule rounded-lg px-3 py-2 text-xs font-medium text-dim">{name}</div>
@@ -104,9 +104,9 @@ export default function Competitive({ navigate }: Props) {
                   </div>
                   <div className="mt-3 text-[10px] text-muted">Route · Auth · No contract healing</div>
                 </div>
-                {/* Q4 — bottom right */}
+                {/* Q4 bottom right */}
                 <div className="bg-canvas p-6">
-                  <div className="text-[10px] font-bold text-dim uppercase tracking-widest mb-3">Q4 — APM & AIOps</div>
+                  <div className="text-[10px] font-bold text-dim uppercase tracking-widest mb-3">Q4 · APM & AIOps</div>
                   <div className="space-y-2">
                     {['Datadog', 'New Relic', 'Moogsoft'].map(name => (
                       <div key={name} className="bg-surface border border-rule rounded-lg px-3 py-2 text-xs font-medium text-dim">{name}</div>
@@ -126,9 +126,9 @@ export default function Competitive({ navigate }: Props) {
 
           {/* Positioning statement */}
           <div className="max-w-3xl mx-auto bg-ink rounded-2xl p-8 text-center mb-6">
-            <div className="text-dim text-xs font-mono mb-4">mendr.io — positioning statement</div>
+            <div className="text-dim text-xs font-mono mb-4">mendr.io · positioning</div>
             <blockquote className="text-white text-lg leading-relaxed font-[family-name:var(--font-display)] font-medium">
-              "Observability tools tell you something broke. API gateways route traffic. Mendr is the only layer that fixes broken traffic in production — with human-in-the-loop trust and a control plane that scales from an API gateway today to Envoy and Istio at enterprise scale tomorrow."
+              "Observability tools tell you something broke. Gateways route traffic. Mendr repairs broken traffic in production, with human approval, and a control plane that can grow from today{"'"}s gateway deployment toward Envoy and Istio at scale."
             </blockquote>
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function Competitive({ navigate }: Props) {
       <section className="bg-surface border-y border-rule py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-10">
-            <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Honest Comparison</div>
+            <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Head-to-head</div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">
               Head-to-head with every category
             </h2>
@@ -190,14 +190,14 @@ export default function Competitive({ navigate }: Props) {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-10">
             <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Market Timing</div>
-            <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">Why 2026 is the right moment</h2>
+            <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">Why timing favors this approach</h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { num: '01', title: 'API-first maturity', desc: 'Enterprises completed microservices adoption — the problem is no longer "should we decompose" but "how do we keep contracts aligned at scale."' },
-              { num: '02', title: 'LLM reliability concerns', desc: 'Raw LLM output on production paths is unacceptable. Buyers demand verified, gated AI. Mendr\'s 2026-aligned design matches security advisory climate.' },
-              { num: '03', title: 'Edge deployment renaissance', desc: 'Customer-owned VPC gateways regained popularity for latency and data residency — Mendr\'s hybrid model matches this infrastructure direction.' },
-              { num: '04', title: 'Cost consciousness', desc: 'LLM inference during incidents can explode without admission control. Mendr treats inference as a gated resource — matching enterprise FinOps culture.' },
+              { num: '01', title: 'API-first maturity', desc: 'Most enterprises already run microservices. The hard problem now is keeping contracts aligned as teams ship independently.' },
+              { num: '02', title: 'Verified AI on the path', desc: 'Buyers want AI help on production paths only with gates and verification. Mendr keeps human approval as the default.' },
+              { num: '03', title: 'Edge in the customer network', desc: 'VPC and on-prem gateways are back for latency and data residency. Mendr\'s SaaS hybrid and on-prem models fit that pattern.' },
+              { num: '04', title: 'Cost control on inference', desc: 'LLM spend during incidents can spike without limits. Mendr meters and budgets inference so FinOps stays in control.' },
             ].map(item => (
               <div key={item.num} className="bg-surface border border-rule rounded-xl p-5">
                 <div className="font-[family-name:var(--font-display)] font-bold text-4xl text-[#F3F4F6] mb-3 leading-none">{item.num}</div>
