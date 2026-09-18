@@ -139,7 +139,8 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
             )}
           </button>
           <button
-            onClick={() => navigate('sign-in')}
+          // onClick={() => navigate('sign-in')}
+            onClick={() => navigate('get-started', { section: 'contact' })}
             className="hidden lg:block text-sm font-medium text-dim hover:text-on-surface transition-colors"
           >
             Sign in
