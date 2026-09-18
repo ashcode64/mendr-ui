@@ -9,13 +9,13 @@ const steps = [
     label: 'Detect',
     color: 'var(--mendr-sky)',
     textColor: 'var(--mendr-sky-ink)',
-    title: 'Edge-local failure classification',
+    title: 'Catch failures at the gateway',
     bullets: [
       'Observes every proxied call at the gateway layer',
-      'Classifies failures: SCHEMA_MISMATCH, ROUTING, CORS, SPLICE, UNKNOWN',
-      'Deduplicates with a 60-second shared-memory window',
-      'Scrubs PII before any data leaves the customer network',
-      'Reports asynchronously — zero per-request control-plane latency',
+      'Sorts failures into clear types: SCHEMA_MISMATCH, ROUTING, CORS, SPLICE, UNKNOWN',
+      'Groups repeated failures in a 60-second window so noise stays low',
+      'Scrubs PII (personal data) before anything leaves your network',
+      'Reports in the background. Live requests do not wait on the control plane.',
     ],
     badge: 'Data Plane',
   },
@@ -24,13 +24,13 @@ const steps = [
     label: 'Diagnose',
     color: 'var(--mendr-cream)',
     textColor: 'var(--mendr-cream-ink)',
-    title: 'AI analysis under admission control',
+    title: 'AI analysis to propose a fix',
     bullets: [
-      'Kafka consumer processes failures asynchronously',
-      'LLM admission control: coalesce, semaphore, budget gates, defer-with-ack',
-      'Assembles ErrorSignature with contract context and topology',
-      'LangGraph orchestrates propose → verify → simulate → refine loop',
-      'Output is always a closed-opcode MendrScript program — never raw LLM text',
+      'Failures are processed in the background after the request finishes',
+      'AI work is rate-limited and budget-capped so cost stays under control',
+      'Builds a factual picture of the error with contract context, and services map',
+      'Proposes, verifies, and simulates a fix before anyone sees it',
+      'Output is always a MendrScript program with fixed operations, never raw AI text',
     ],
     badge: 'Control Plane',
   },
@@ -41,11 +41,11 @@ const steps = [
     textColor: 'var(--mendr-success)',
     title: 'Human-in-the-loop safety gate',
     bullets: [
-      'Conformal prediction + Venn-Abers intervals gate auto-apply',
-      'Wide uncertainty intervals force PENDING_APPROVAL — always',
-      'Operator reviews Venn-Abers confidence bars in the dashboard',
-      'Chat synthesis available: converse, refine, then approve',
-      'Auto-apply defaults off; opt-in requires calibrated confidence',
+      'Confidence score gives a clear picture of the certainity of the fix.',
+      'Wide uncertainty always forces PENDING_APPROVAL',
+      'Operators review confidence bars in the dashboard',
+      'Optional chat to refine the proposal, or change the patch and then approve',
+      'Auto-apply is off by default and is experimental currently. Opt-in needs calibrated confidence.',
     ],
     badge: 'Control Plane',
   },
@@ -54,13 +54,13 @@ const steps = [
     label: 'Heal',
     color: 'var(--mendr-brand)',
     textColor: '#FFFFFF',
-    title: 'Edge-local patch deployment',
+    title: 'Apply the patch at the gateway',
     bullets: [
-      'Rule compiles into capability-gated JSON snapshot',
-      'Edge long-polls control plane every ~30 seconds',
-      'Snapshot written to local Redis AOF cache',
-      'Transform applied on next matching request — no restart',
-      'Patch auto-expires by TTL; permanent fix remains team responsibility',
+      'Approved rule compiles into a capability-gated config snapshot',
+      'Gateway checks for updates about every 30 seconds',
+      'Snapshot is stored in local cache for fast enforcement',
+      'Next matching request gets the transform. No restart.',
+      'Patches expire on a timer. Permanent fix remains team\'s responsibility',
     ],
     badge: 'Data Plane',
   },
@@ -77,7 +77,7 @@ export default function Solution({ navigate }: Props) {
             The four-step healing loop
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            Observe at the edge. Decide in the control plane. Enforce from a local snapshot. This design principle underpins every component in the Mendr platform.
+            Observes production traffic at your gateway edge, detects a failure, proposes a fix, waits for your approval, then applies a patch at the edge. Four steps. One loop.
           </p>
         </div>
       </HeroSpotlight>
@@ -241,18 +241,18 @@ export default function Solution({ navigate }: Props) {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                title: 'Zero control-plane latency on proxy path',
-                desc: 'Failure reports are asynchronous timer POSTs. Route sync is a background long-poll. Every request is served from local Redis snapshots.',
+                title: 'Live traffic stays fast',
+                desc: 'Failure reports and config sync run in the background. Every request is served from a local snapshot at the gateway cache.',
                 icon: '⚡',
               },
               {
-                title: 'Resilient to control-plane outages',
-                desc: 'Edge Redis holds AOF-persisted snapshots. Approved transforms keep working even if the control plane is temporarily unavailable.',
+                title: 'Patches keep working offline',
+                desc: 'Approved transforms stay on the gateway. They continue to run even if the control plane is briefly unavailable.',
                 icon: '🔄',
               },
               {
-                title: 'LLM never runs on the hot path',
-                desc: 'AI analysis is Kafka-async. Admission control defers over-budget work rather than retrying into a cost storm. The edge executes only precompiled MendrScript.',
+                title: 'LLM never runs on the hot path\n',
+                desc: 'Diagnosis runs in the background under budget limits. The gateway only executes pre-approved MendrScript.',
                 icon: '🛡️',
               },
             ].map(insight => (
@@ -273,7 +273,7 @@ export default function Solution({ navigate }: Props) {
             Dive deeper into each step
           </h2>
           <p className="text-sm text-cream-ink/75 mb-6">
-            Explore Detect, Diagnose, Approve, and Heal in full technical detail — with architecture decisions, code evidence, and edge behavior.
+            Explore Detect, Diagnose, Approve, and Heal with examples of what operators see and what the gateway does.
           </p>
           <button onClick={() => navigate('the-loop')} className="bg-brand text-white font-semibold px-7 py-3.5 rounded-lg hover:bg-brand-dark transition-colors text-sm">
             Explore the loop in detail

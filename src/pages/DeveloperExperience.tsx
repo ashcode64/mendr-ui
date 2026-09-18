@@ -6,13 +6,13 @@ interface Props { navigate: NavigateFn }
 
 const dashboardRoutes = [
   { route: '/', label: 'Overview', desc: 'Failure trends, recent heals, active rules summary, system health' },
-  { route: '/failures', label: 'Failures', desc: 'Paginated failure list with detail modal — route, category, payload context' },
-  { route: '/analysis', label: 'HITL Queue', desc: 'Pending proposals with Venn-Abers confidence, approve/reject, SSE chat synthesis' },
-  { route: '/rules', label: 'Active Rules', desc: 'Rules by type — schema, routing, CORS, origin override, DSL programs' },
+  { route: '/failures', label: 'Failures', desc: 'Paginated  failure list with detail: route, category, payload context' },
+  { route: '/analysis', label: 'HITL Queue', desc: 'Pending proposals with confidence scores, approve/reject,AI chat agent' },
+  { route: '/rules', label: 'Active Rules', desc: 'Rules by type: schema, routing, CORS, origin override, DSL programs' },
   { route: '/services', label: 'Services', desc: 'Service registration, OpenAPI/manifest import, upstream instance management' },
   { route: '/portal', label: 'Developer Portal', desc: 'Catalog, API specs, self-service keys, usage analytics, AI route config' },
   { route: '/simulate', label: 'Simulate', desc: 'Pre-built failure scenarios for demos and team training' },
-  { route: '/audit', label: 'Audit', desc: 'Deploy/approve/disable history — immutable log for compliance' },
+  { route: '/audit', label: 'Audit', desc: 'Approve/Deploy/Disable/Delete rules. Immutable log for compliance' },
 ]
 
 type Screen = 'overview' | 'analysis' | 'chat'
@@ -56,7 +56,7 @@ export default function DeveloperExperience({ navigate }: Props) {
 
     analysis: (
       <div className="p-5 space-y-3">
-        <div className="text-[10px] font-semibold text-dim uppercase tracking-wide">Pending approval — 2 proposals</div>
+        <div className="text-[10px] font-semibold text-dim uppercase tracking-wide">Pending approval · 2 proposals</div>
         {[
           { route: 'inventory→shipping POST /ship', op: 'rename /tag_id → /tag_sent', confidence: 94, label: 'High' },
           { route: 'payment→billing POST /charge', op: 'coerce /amount string→number', confidence: 71, label: 'Moderate' },
@@ -83,15 +83,16 @@ export default function DeveloperExperience({ navigate }: Props) {
 
     chat: (
       <div className="p-5 flex flex-col gap-3 h-full">
-        <div className="text-[10px] font-semibold text-dim uppercase tracking-wide">Chat synthesis — analysis #1247</div>
+        <div className="text-[10px] font-semibold text-dim uppercase tracking-wide">Chat synthesis · analysis #1247</div>
         <div className="flex-1 space-y-3 min-h-0">
-          <div className="flex gap-2">
-            <div className="w-5 h-5 rounded-full bg-rule flex items-center justify-center text-[8px] flex-shrink-0">👤</div>
+          <div className="flex gap-2 justify-end">
             <div className="bg-canvas border border-rule rounded-lg p-2.5 text-[10px] text-on-surface max-w-[80%]">
               Can you also strip the legacy_id field from the request while renaming?
             </div>
+            <div className="w-5 h-5 rounded-full bg-rule flex items-center justify-center text-[8px] flex-shrink-0">👤</div>
           </div>
-          <div className="flex gap-2 justify-end">
+          <div className="flex gap-2">
+            <div className="w-5 h-5 rounded-full bg-sky flex items-center justify-center text-[8px] flex-shrink-0">AI</div>
             <div className="bg-sky rounded-lg p-2.5 text-[10px] text-brand max-w-[85%]">
               <div className="font-semibold mb-1">Updated proposal (verified ✓):</div>
               <pre className="font-mono text-[9px] text-[#1E3A5F] bg-white/50 rounded p-2 whitespace-pre">
@@ -104,7 +105,6 @@ export default function DeveloperExperience({ navigate }: Props) {
               </pre>
               <div className="mt-1.5 text-[#1E3A5F] opacity-70">2 ops. Java+Lua verified. 5/5 simulation samples pass.</div>
             </div>
-            <div className="w-5 h-5 rounded-full bg-sky flex items-center justify-center text-[8px] flex-shrink-0">AI</div>
           </div>
         </div>
         <div className="flex gap-2 mt-auto">
@@ -125,7 +125,7 @@ export default function DeveloperExperience({ navigate }: Props) {
             Operator dashboard & developer portal
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            A React dashboard (port 3000) for operators to review proposals, manage services, monitor the healing loop, and access the developer portal.
+            An intuitive dashboard for operators to review proposals, manage services, monitor the healing loop, and access the portal for catalog, keys, and usage.
           </p>
         </div>
       </HeroSpotlight>
@@ -228,7 +228,7 @@ export default function DeveloperExperience({ navigate }: Props) {
                 Self-service for API consumers
               </h2>
               <p className="text-dim leading-relaxed mb-5">
-                The developer portal exposes service catalog, OpenAPI specs, self-service API keys, usage analytics, and AI route configuration — all behind per-tenant WorkOS authentication.
+                Catalog, OpenAPI specs, self-service API keys, usage analytics, and AI route config, all behind per-tenant WorkOS authentication.
               </p>
               <div className="space-y-3">
                 {[
@@ -277,9 +277,9 @@ export default function DeveloperExperience({ navigate }: Props) {
         <div className="max-w-5xl mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-5">
             {[
-              { title: 'WorkOS AuthKit', desc: 'SSO and enterprise auth for operator dashboard when REACT_APP_WORKOS_CLIENT_ID configured. Transparent dev passthrough when not.', icon: '🔐' },
-              { title: 'Per-tenant API keys', desc: 'Edges authenticate with <prefix>.<secret> format. sha256 hashed at rest. Admin rotation via POST /api/internal/admin/api-keys.', icon: '🗝️' },
-              { title: 'SSE streaming chat', desc: 'Chat synthesis streams via /api/chat/stream proxied through frontend nginx with buffering disabled and 120s timeout.', icon: '💬' },
+              { title: 'WorkOS AuthKit', desc: 'SSO and enterprise auth for the operator dashboard when WorkOS is configured. Local passthrough in development when it is not.', icon: '🔐' },
+              { title: 'Per-tenant API keys', desc: 'Edges authenticate with a prefix.secret key. Secrets are hashed at rest. Admins can rotate keys via the API.', icon: '🗝️' },
+              { title: 'SSE streaming chat', desc: 'Proposal chat streams live so operators can refine a fix before approving it.', icon: '💬' },
             ].map(item => (
               <div key={item.title} className="bg-surface border border-rule rounded-xl p-5">
                 <div className="text-2xl mb-3">{item.icon}</div>

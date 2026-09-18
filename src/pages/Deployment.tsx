@@ -14,7 +14,7 @@ export default function Deployment({ navigate }: Props) {
             Deploy where your data lives
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            SaaS hybrid, full on-prem, or air-gapped. Mendr supports multiple deployment topologies aligned with enterprise security and latency requirements.
+            SaaS hybrid, full on-prem, or air-gapped. Choose the topology that is aligned with your enterprise security and latency requirements.
           </p>
         </div>
       </HeroSpotlight>
@@ -29,19 +29,19 @@ export default function Deployment({ navigate }: Props) {
                 name: 'SaaS hybrid',
                 badge: 'Recommended',
                 badgeColor: 'bg-success/20 text-success',
-                desc: 'Control plane hosted by Mendr (or customer VPC cloud account); data plane gateway deployed in each customer network close to services.',
+                desc: 'Control plane hosted by Mendr (or in your cloud account). Edge gateway runs in each customer network, close to your services.',
                 flow: [
                   'App calls → local edge :8080 → upstream services',
-                  'Failure telemetry → CP over HTTPS with tenant API key',
-                  'Payload healing is local — request/response bodies never leave customer network',
-                  'Only redacted failure samples (PII-scrubbed) reach control plane',
+                  'Failure telemetry → control plane over HTTPS with tenant API key',
+                  'Payload healing stays local: request and response bodies never leave your network',
+                  'Only redacted failure samples (PII scrubbed) reach the control plane',
                 ],
                 config: [
                   'MENDR_CONTROL_PLANE_URL',
                   'GATEWAY_EDGE_API_KEY',
                   'MENDR_TENANT_ID (optional)',
                 ],
-                when: 'Default for production. Minimizes data-plane latency. Satisfies data residency for request/response bodies.',
+                when: 'Default for production. Low edge latency. Request and response bodies stay in your network.',
                 color: 'var(--mendr-sky)',
                 textColor: 'var(--mendr-sky-ink)',
               },
@@ -50,19 +50,19 @@ export default function Deployment({ navigate }: Props) {
                 name: 'Full on-prem',
                 badge: 'Air-gapped',
                 badgeColor: 'bg-warning/20 text-warning',
-                desc: 'Both control plane and data plane deployed in customer data center via docker compose up -d --build. No external SaaS dependency.',
+                desc: 'Control plane and data plane both run in your data center via docker compose. No external SaaS dependency.',
                 flow: [
-                  'All services in customer infrastructure',
+                  'All services in your infrastructure',
                   'No external calls to Mendr infrastructure',
                   'Complete data sovereignty and air-gap compliance',
-                  'Customer manages upgrades and operations',
+                  'You manage upgrades and operations',
                 ],
                 config: [
                   'docker compose up -d --build',
                   'All services co-located',
                   'Customer-managed TLS and networking',
                 ],
-                when: 'Air-gapped environments, regulated industries requiring no external SaaS dependency, development and POC clusters.',
+                when: 'Air-gapped environments, regulated industries that cannot use external SaaS, or POC clusters.',
                 color: 'var(--mendr-cream)',
                 textColor: 'var(--mendr-cream-ink)',
               },
@@ -71,19 +71,19 @@ export default function Deployment({ navigate }: Props) {
                 name: 'Resilience modes',
                 badge: 'Always-on',
                 badgeColor: 'bg-success/20 text-success',
-                desc: 'Multiple layers of edge resilience ensure the data plane keeps serving even during control-plane degradation or maintenance windows.',
+                desc: 'Built-in edge resilience so the data plane keeps serving during control-plane outages or maintenance.',
                 flow: [
-                  'Java fallback: delegates to CP when snapshot missing or cold start',
-                  'LKG serving: stale ingress radixtree continues; alert at 1-hour threshold',
-                  'CP outage: edge continues proxying with last synced rules',
-                  'Full resync every 300s backstops missed delta updates',
+                  'Custom fallback gateway when snapshot is missing or on cold start',
+                  'Last-known-good serving continues; alert after about one hour of staleness',
+                  'During a control-plane outage, edge keeps proxying with last synced rules',
+                  'Full resync every 5 minutes backstops missed delta updates',
                 ],
                 config: [
-                  'MENDR_JAVA_FALLBACK=true (default)',
+                  'MENDR_CUSTOM_FALLBACK=true (default)',
                   'MENDR_FULL_RESYNC_INTERVAL_SEC=300',
                   'STALE_ALERT_SEC=3600',
                 ],
-                when: 'Built-in to all deployment models. Not a separate model — a resilience guarantee.',
+                when: 'Included in every deployment model. A resilience guarantee, not a separate SKU.',
                 color: 'color-mix(in srgb, var(--mendr-success) 18%, var(--mendr-surface))',
                 textColor: 'var(--mendr-success)',
               },
@@ -135,17 +135,17 @@ export default function Deployment({ navigate }: Props) {
             <div>
               <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Forward Path</div>
               <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-white mb-4">
-                From OpenResty today to Envoy and Istio tomorrow
+                OpenResty today, Envoy and Istio next
               </h2>
               <p className="text-muted leading-relaxed mb-5">
-                The codebase anticipates expansion beyond a single OpenResty gateway per site. RouteConfigSnapshotPublisher includes Envoy Wasm snapshot compatibility comments as a forward path.
+                Today you run a single API gateway per site. Our team is in works to build a sidecar proxy architecture to support deterministic, low-latency transformations for high-frequency, sub-millisecond systems like financial trading platforms.
               </p>
               <div className="space-y-3">
                 {[
-                  { label: 'Today', desc: 'OpenResty/LuaJIT gateway — full MendrScript capability in a single deployable container', done: true },
-                  { label: 'Near-term', desc: 'gRPC-Web transcoding, Envoy transcoder integration comment in data plane', done: false },
-                  { label: 'Medium-term', desc: 'Envoy sidecar federation — compile MendrScript programs for Wasm enforcement', done: false },
-                  { label: 'Long-term', desc: 'Full mesh-native deployment at Istio scale — same MendrScript semantics, different enforcement surface', done: false },
+                  { label: 'Today', desc: 'API gateway with full MendrScript transformations in one container', done: true },
+                  { label: 'Near-term', desc: 'gRPC-Web transcoding and Envoy transcoder integration', done: false },
+                  { label: 'Medium-term', desc: 'Envoy sidecar federation: compile MendrScript for Wasm enforcement', done: false },
+                  { label: 'Long-term', desc: 'Mesh-native at Istio scale with the same MendrScript semantics', done: false },
                 ].map(item => (
                   <div key={item.label} className="flex items-start gap-3">
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${item.done ? 'bg-success' : 'bg-white/10'}`}>
@@ -169,7 +169,7 @@ export default function Deployment({ navigate }: Props) {
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
               <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-5">Edge capability tokens</div>
               <p className="text-sm text-muted mb-5">
-                Edges advertise capabilities on sync. Control plane withholds incompatible snapshot fields rather than applying them silently — preventing subtle production bugs on older edge versions.
+                Edges advertise what they support on sync. The control plane withholds incompatible fields instead of applying them silently, which protects older edge versions.
               </p>
               <div className="space-y-2 font-mono text-xs">
                 {[
@@ -209,19 +209,19 @@ export default function Deployment({ navigate }: Props) {
                 step: '01',
                 title: 'Start the full stack',
                 code: 'git clone mendr-control-plane\ndocker compose up -d --build',
-                desc: 'Postgres, Redis, Kafka, all Java services, conversation engine, Rust minimizer, and React dashboard.',
+                desc: 'Postgres, Redis, Kafka, Java services, conversation engine, Rust minimizer, and React dashboard.',
               },
               {
                 step: '02',
                 title: 'Start the edge gateway',
                 code: 'git clone mendr-data-plane\nMENDR_CONTROL_PLANE_URL=... \\\n  docker compose up -d',
-                desc: 'OpenResty gateway with local edge Redis. Configures GATEWAY_EDGE_API_KEY, MENDR_TENANT_ID.',
+                desc: 'OpenResty gateway with local edge Redis. Set GATEWAY_EDGE_API_KEY and MENDR_TENANT_ID.',
               },
               {
                 step: '03',
                 title: 'Register your first service',
                 code: 'curl -X POST /api/services/import-openapi \\\n  -F "file=@openapi.yaml"',
-                desc: 'Or use POST /api/services/import-manifest with a mendr.yaml for GitOps workflows.',
+                desc: 'Or POST /api/services/import-manifest with a mendr.yaml for GitOps workflows.',
               },
             ].map(step => (
               <div key={step.step} className="border border-rule-strong rounded-xl overflow-hidden bg-surface shadow-sm">

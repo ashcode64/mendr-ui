@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import emailjs from '@emailjs/browser'
 import type { NavigateFn } from '../App'
 import HeroSpotlight from '../components/HeroSpotlight'
+import { contactFormParams, emailjsConfig } from '../emailjs-config'
 
 interface Props { navigate: NavigateFn }
 
@@ -11,12 +13,33 @@ function ContactSection() {
   const [message, setMessage] = useState('')
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!name || !email || !message) return
+
+    const { serviceId, templateId, publicKey } = emailjsConfig
+    if (!publicKey || !serviceId || !templateId) {
+      setError('Email is not configured. Email us at team.mendr@gmail.com')
+      return
+    }
+
     setSending(true)
-    setTimeout(() => { setSending(false); setSent(true) }, 1000)
+    setError('')
+    try {
+      await emailjs.send(
+        serviceId,
+        templateId,
+        contactFormParams({ name, email, company, message }),
+        { publicKey },
+      )
+      setSent(true)
+    } catch {
+      setError('Message not sent. Try again or email team.mendr@gmail.com')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -24,7 +47,7 @@ function ContactSection() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
 
-          {/* Left — copy */}
+          {/* Left: copy */}
           <div className="lg:pt-4">
             <div className="inline-flex items-center gap-2 bg-cream text-cream-ink text-xs font-semibold px-3.5 py-1.5 rounded-full mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-brand"></span>
@@ -48,7 +71,7 @@ function ContactSection() {
             </a>
           </div>
 
-          {/* Right — form */}
+          {/* Right: form */}
           <div className="bg-surface border border-rule rounded-2xl p-8 shadow-sm">
             {sent ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -99,12 +122,15 @@ function ContactSection() {
                   <textarea
                     value={message}
                     onChange={e => setMessage(e.target.value)}
-                    placeholder={"What's breaking, and how can we help?"}
+                    placeholder="What's breaking, and how can we help?"
                     required
                     rows={4}
                     className="w-full border border-rule bg-canvas rounded-lg px-4 py-3 text-sm text-on-surface placeholder-muted focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 transition-all resize-y"
                   />
                 </div>
+                {error && (
+                  <p className="text-sm text-error">{error}</p>
+                )}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     type="submit"
@@ -122,8 +148,8 @@ function ContactSection() {
                     ) : 'Send message'}
                   </button>
                   <a
-                    href="mailto:team@mendr.io"
-                    className="flex-1 sm:flex-none inline-flex items-center justify-center bg-cream text-ink font-bold px-8 py-3.5 rounded-lg hover:bg-[#F5F3C0] transition-colors text-sm"
+                    href="mailto:team.mendr@gmail.com"
+                    className="flex-1 sm:flex-none inline-flex items-center justify-center bg-cream text-ink font-bold px-8 py-3.5 rounded-lg border border-ink/25 hover:bg-[#F5F3C0] transition-colors text-sm"
                   >
                     Get in touch
                   </a>
@@ -146,13 +172,13 @@ export default function GetStarted({ navigate }: Props) {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <div className="inline-flex items-center gap-2 bg-sky text-sky-ink text-xs font-semibold px-3.5 py-1.5 rounded-full mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse-slow"></span>
-            Now in production — August 2026
+            Now in production · August 2026
           </div>
           <h1 className="font-[family-name:var(--font-display)] font-bold text-[clamp(2.4rem,6vw,4rem)] leading-[1.1] tracking-[-0.03em] text-on-surface mb-5">
-            Stop treating integration<br />failures as facts of life.
+            Stop treating integration failures as facts of life.
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto mb-10">
-            Mendr is deployable today — SaaS hybrid or full on-prem. The complete product loop is implemented and verifiable in the current codebases.
+            Mendr is deployable today as SaaS hybrid or full on-prem. The product loop is implemented and verifiable in the current codebases.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
@@ -331,7 +357,7 @@ curl -X POST http://localhost:8095/api/gateway/gitops/manifest \\
             {[
               { label: 'How It Works', desc: 'Four-step healing loop overview', page: 'solution' as const, bg: 'bg-sky', text: 'text-sky-ink', descText: 'text-sky-ink/70' },
               { label: 'Architecture', desc: 'Two-plane design deep dive', page: 'architecture' as const, bg: 'bg-cream', text: 'text-cream-ink', descText: 'text-cream-ink/70' },
-              { label: 'Security', desc: 'HITL, compliance, multi-tenancy', page: 'safety' as const, bg: 'bg-success/15', text: 'text-success', descText: 'text-success/80' },
+              { label: 'Security', desc: 'Human approval, compliance, multi-tenancy', page: 'safety' as const, bg: 'bg-success/15', text: 'text-success', descText: 'text-success/80' },
               { label: 'Business Impact', desc: 'ROI framework and calculator', page: 'roi' as const, bg: 'bg-sky', text: 'text-sky-ink', descText: 'text-sky-ink/70' },
             ].map(item => (
               <button
@@ -353,7 +379,7 @@ curl -X POST http://localhost:8095/api/gateway/gitops/manifest \\
         </div>
       </section>
 
-      {/* Final CTA — Get in touch */}
+      {/* Final CTA: Get in touch */}
       <ContactSection />
     </div>
   )

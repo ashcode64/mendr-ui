@@ -19,23 +19,23 @@ const navGroups: { label: string; items: NavItem[] }[] = [
     label: 'Product',
     items: [
       { id: 'problem', label: 'The Problem', desc: 'Why APIs break in production' },
-      { id: 'solution', label: 'How It Works', desc: 'The four-step healing loop' },
+      { id: 'solution', label: 'How It Works', desc: 'Detect, diagnose, approve, heal' },
       { id: 'the-loop', label: 'The Loop', desc: 'Detect · Diagnose · Approve · Heal' },
     ],
   },
   {
     label: 'Technology',
     items: [
-      { id: 'architecture', label: 'Architecture', desc: 'Two-plane design' },
-      { id: 'mendrscript', label: 'MendrScript', desc: 'Verified transform DSL' },
-      { id: 'safety', label: 'Safety & Trust', desc: 'Human-in-the-loop by design' },
+      { id: 'architecture', label: 'Architecture', desc: 'Control plane and edge' },
+      { id: 'mendrscript', label: 'MendrScript', desc: 'Verified transform language' },
+      { id: 'safety', label: 'Safety & Trust', desc: 'Human approval by default' },
     ],
   },
   {
     label: 'Why Mendr',
     items: [
-      { id: 'use-cases', label: 'Use Cases', desc: 'Field rename, CORS, routing...' },
-      { id: 'competitive', label: 'Competitive', desc: 'A new category' },
+      { id: 'use-cases', label: 'Use Cases', desc: 'Field rename, CORS, routing' },
+      { id: 'competitive', label: 'Competitive', desc: 'Where Mendr fits' },
       { id: 'stakeholders', label: 'For Your Team', desc: 'CTO · SRE · Security · Product' },
       { id: 'get-started', label: 'Contact us', desc: 'Talk about your stack', section: 'contact' },
     ],
@@ -44,9 +44,9 @@ const navGroups: { label: string; items: NavItem[] }[] = [
     label: 'Platform',
     items: [
       { id: 'deployment', label: 'Deployment', desc: 'SaaS hybrid or full on-prem' },
-      { id: 'developer-experience', label: 'Developer Portal', desc: 'Operator UI & developer portal' },
+      { id: 'developer-experience', label: 'Developer Portal', desc: 'Operator UI and portal' },
       { id: 'roadmap', label: 'Roadmap', desc: "What's shipped, what's next" },
-      { id: 'roi', label: 'Business Impact', desc: 'ROI framework' },
+      { id: 'roi', label: 'Business Impact', desc: 'ROI worksheet' },
     ],
   },
 ]
@@ -139,7 +139,8 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
             )}
           </button>
           <button
-            onClick={() => navigate('sign-in')}
+          // onClick={() => navigate('sign-in')}
+            onClick={() => navigate('get-started', { section: 'contact' })}
             className="hidden lg:block text-sm font-medium text-dim hover:text-on-surface transition-colors"
           >
             Sign in

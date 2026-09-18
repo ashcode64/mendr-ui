@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import 'tailwindcss';
 
-/* Light (default) — product website design_md */
+/* Light (default) - product website design_md */
 :root {
   --mendr-canvas: #FBFAF8;
   --mendr-surface: #FFFFFF;
@@ -34,7 +34,7 @@
   --mendr-spotlight-cream-opacity: 0.66;
 }
 
-/* Dark — Mendr Dark Mode Design System v1.4.0-dark */
+/* Dark - Mendr Dark Mode Design System v1.4.0-dark */
 html[data-theme='dark'] {
   --mendr-canvas: #0F1114;
   --mendr-surface: #1A1D21;
@@ -186,7 +186,7 @@ body {
 .delay-400 { animation-delay: 400ms; }
 .delay-500 { animation-delay: 500ms; }
 
-/* Transparent scrollbar track — thumb only */
+/* Transparent scrollbar track - thumb only */
 html {
   scrollbar-width: thin;
   scrollbar-color: var(--mendr-rule) transparent;

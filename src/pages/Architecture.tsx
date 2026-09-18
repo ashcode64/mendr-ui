@@ -8,8 +8,7 @@ const asyncBoundaries = [
   { interaction: 'Failure report', pattern: 'Async timer POST', latencyImpact: 'None' },
   { interaction: 'Route sync', pattern: 'Long-poll background worker', latencyImpact: 'None' },
   { interaction: 'AI analysis', pattern: 'Kafka consumer', latencyImpact: 'None' },
-  { interaction: 'Operator approval', pattern: 'HTTPS to CP', latencyImpact: 'None until next sync' },
-  { interaction: 'Java fallback', pattern: 'Sync HTTPS to CP', latencyImpact: 'Adds CP RTT — degraded mode only' },
+  { interaction: 'Operator approval', pattern: 'HTTPS to CP', latencyImpact: 'None until next sync' }
 ]
 
 const controlPlaneServices = [
@@ -33,7 +32,7 @@ export default function Architecture({ navigate }: Props) {
             Two-plane architecture
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            Separating latency-sensitive enforcement from latency-tolerant intelligence. The data plane keeps serving even when the control plane is temporarily unavailable.
+            Mendr splits into a latency-sensitive gateway in your network (data plane) and a latency-tolerant brain with dashboard in the cloud (control plane). Traffic keeps flowing even if the control plane is briefly unavailable.
           </p>
         </div>
       </HeroSpotlight>
@@ -53,7 +52,7 @@ export default function Architecture({ navigate }: Props) {
               </div>
               <div className="p-6 space-y-3">
                 <p className="text-sm text-dim mb-5">
-                  Deployed in customer VPCs. Handles all proxy traffic locally. Never requires a round-trip to the control plane on the hot path.
+                  Runs in your VPC. Proxies traffic locally. Live requests do not wait on a round-trip to the control plane.
                 </p>
                 {[
                   { name: 'mendr-gateway', desc: 'Proxy, WAF, auth, rate limit, AI gateway, transforms', port: '8080' },
@@ -76,7 +75,7 @@ export default function Architecture({ navigate }: Props) {
                 <div className="bg-success/10 border border-success/40 rounded-lg p-4 mt-4">
                   <div className="text-xs font-bold text-[#16A34A] mb-1">Resilience guarantee</div>
                   <div className="text-xs text-success">
-                    Edge serves from last-known-good Redis snapshots during control-plane outages. Existing approved transforms keep working. New heals unavailable until CP returns.
+                    The gateway keeps serving from last-known-good Redis snapshots if the control plane is down. Approved patches already on the edge keep working. New heals wait until the control plane returns.
                   </div>
                 </div>
               </div>
@@ -93,7 +92,7 @@ export default function Architecture({ navigate }: Props) {
               </div>
               <div className="p-6 space-y-2">
                 <p className="text-sm text-dim mb-5">
-                  Cloud-hosted SaaS or on-prem. Runs analysis, stores rules, publishes snapshots, serves the operator dashboard and developer portal.
+                  Cloud SaaS or on-prem. Analyzes failures, stores approved rules, publishes config snapshots, and hosts the operator dashboard and developer portal.
                 </p>
                 {controlPlaneServices.map(svc => (
                   <div key={svc.name} className="flex items-start gap-3 bg-surface border border-rule rounded-lg p-3">
@@ -114,7 +113,7 @@ export default function Architecture({ navigate }: Props) {
 
           {/* Connection between planes */}
           <div className="mt-6 bg-surface border border-rule rounded-xl p-6">
-            <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-4">Inter-plane communication</div>
+            <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-4">How the planes talk</div>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
                 {
@@ -131,7 +130,7 @@ export default function Architecture({ navigate }: Props) {
                 },
                 {
                   direction: 'Edge ↔ CP (degraded)',
-                  calls: ['POST /api/gateway/proxy (Java fallback)', 'Only when snapshot missing or cold start', 'Adds CP RTT — not the happy path'],
+                  calls: ['POST /api/gateway/proxy (Java fallback)', 'Only when snapshot missing or cold start', 'Adds CP RTT, not the normal path'],
                   color: '#FEF3C7',
                   textColor: '#92400E',
                 },
@@ -164,17 +163,17 @@ export default function Architecture({ navigate }: Props) {
               {
                 num: '01',
                 title: 'Deterministic over probabilistic',
-                desc: 'LLMs propose hypotheses. Output is constrained into closed-opcode MendrScript, minimized, verified, and gated. The edge never executes raw model text.',
+                desc: 'AI proposes a fix. Mendr turns it into a checked MendrScript program (a fixed set of safe operations), shrinks it, verifies it, and waits for a human approval. The edge never executes raw model text.',
               },
               {
                 num: '02',
                 title: 'Observe at the edge, decide in the control plane, enforce locally',
-                desc: 'Analysis is asynchronous via Kafka. The data plane serves on last-known-good Redis snapshots even if the control plane or its Redis is temporarily degraded.',
+                desc: 'Analysis happens in the background. The gateway keeps serving from last-known-good snapshots even if the control plane is temporarily down.',
               },
               {
                 num: '03',
-                title: 'Gate the model, not Kafka',
-                desc: 'Over-budget or coalesced LLM work is acknowledged and deferred — metric + log — never nack-retried into an LLM cost storm. Message bus health does not couple to LLM vendor rate limits.',
+                title: 'Protect the AI budget, keep the message bus healthy',
+                desc: 'When AI work is over budget, Mendr acknowledges and defers it (with metrics and logs). It does not retry into a cost spiral. Message-bus health stays independent of LLM vendor rate limits.',
               },
             ].map(p => (
               <div key={p.num} className="border border-rule rounded-xl p-6">
@@ -193,8 +192,11 @@ export default function Architecture({ navigate }: Props) {
           <div className="mb-8">
             <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Latency Analysis</div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">
-              Async vs. sync boundaries
+              What touches live traffic, and what does not
             </h2>
+            <p className="text-dim mt-3 text-sm max-w-2xl">
+              Most control-plane work is background. Live proxy traffic stays on the gateway.
+            </p>
           </div>
           <div className="bg-surface border border-rule rounded-xl overflow-hidden">
             <table className="w-full text-sm">
@@ -256,7 +258,7 @@ export default function Architecture({ navigate }: Props) {
             Want to see what runs at the edge?
           </h2>
           <p className="text-sm text-dim mb-6">
-            MendrScript is the verified DSL that compiles from control-plane proposals to edge-local execution — without LLM output ever touching the hot path.
+            MendrScript is the checked temporary patch language: proposed in the control plane, verified, approved by a person, then run locally on the gateway.
           </p>
           <button onClick={() => navigate('mendrscript')} className="bg-brand text-white font-semibold px-7 py-3.5 rounded-lg hover:bg-brand-dark transition-colors text-sm">
             Explore MendrScript

@@ -5,63 +5,64 @@ interface Props { navigate: NavigateFn }
 
 const shipped = [
   // Data plane
-  'OpenResty/LuaJIT gateway — envelope and transparent ingress modes',
-  'Local edge Redis AOF snapshot cache with LKG fallback',
+  'OpenResty/LuaJIT gateway: envelope and transparent ingress modes',
+  'Local edge Redis snapshot cache with last-known-good fallback',
   'Long-poll route config sync with capability tokens',
-  'MendrScript — legacy buckets + closed-opcode ops[] v2',
-  'Streaming splice JSON rewrite with plan-class safety',
-  'Protocol-aware splice abort + SPLICE failure category',
-  'WAF — builtin OWASP-inspired rules + optional Coraza CRS',
+  'MendrScript: legacy buckets plus closed-opcode ops[] v2',
+  'Streaming JSON rewrite with plan-class safety',
+  'Protocol-aware splice abort plus SPLICE failure category',
+  'WAF: builtin OWASP-inspired rules plus optional Coraza CRS',
   'JWT/OIDC authentication with JWKS cache',
   'Rate limiting, abuse detection, bot detection',
-  'AI gateway — TPM/RPM, prompt firewall, semantic cache',
-  'Load balancing — RR, weighted, consistent hash; canary; mirroring',
-  'Circuit breaker + active healthcheck',
+  'AI gateway: TPM/RPM, prompt firewall, semantic cache',
+  'Load balancing: RR, weighted, consistent hash; canary; mirroring',
+  'Circuit breaker plus active healthcheck',
   'Failure telemetry with PII scrub and edge dedup',
-  'OTLP trace export + Prometheus metrics',
+  'OTLP trace export plus Prometheus metrics',
   // Control plane
-  'Service registry with OpenAPI and manifest import + dry-run',
+  'Service registry with OpenAPI and manifest import plus dry-run',
   'GitOps manifest push API',
   'Kafka pipeline: failures → analysis → approved → rule deploy',
-  'LLM admission control — coalesce, semaphore, budgets, defer-with-ack',
+  'LLM admission control: coalesce, semaphore, budgets, defer-with-ack',
   'Category-aware AI analysis (SCHEMA_MISMATCH, ROUTING, CORS, etc.)',
-  'Conformal + Venn-Abers safety gate (auto-apply default OFF)',
-  'MendrScript verify, simulate, compile, deploy (DSL_PROGRAM)',
-  'Rust minimization sidecar — ddmin + egg EqSat + prove_minimal',
-  'LangGraph conversation engine + SSE chat + /diagnose',
+  'Conformal safety gate (auto-apply default OFF)',
+  'MendrScript verify, simulate, compile, deploy',
+  'Rust minimization sidecar',
+  'Conversation engine plus SSE chat plus /diagnose',
   'Rule engine with audit log and disable',
-  'Precedent commit to pgvector for GraphRAG recall',
-  'Service topology SCD2 graph + deterministic CTE queries',
-  'Multi-tenant FORCE RLS + Redis/Kafka isolation',
-  'WorkOS JWT auth + per-tenant API keys',
-  'Operator dashboard — failures, analysis, rules, services, portal, simulate, audit',
-  'Security CI — gitleaks, Trivy, CodeQL, npm/pip audit',
+  'Precedent store for similar-failure recall',
+  'Service topology graph plus deterministic queries',
+  'Multi-tenant row-level security plus Redis/Kafka isolation',
+  'WorkOS JWT auth plus per-tenant API keys',
+  'Operator dashboard: failures, analysis, rules, services, portal, simulate, audit',
+  'Security CI: gitleaks, Trivy, CodeQL, npm/pip audit',
 ]
 
 const nearTerm = [
-  { title: 'Smart rule optimizer', desc: 'EqSat relocate fusion, candidate generator, POST /optimize endpoint, Portal Monaco UX for interactive program editing', status: 'Planned' },
-  { title: 'Pruning parity CI', desc: 'Align empty-parent delete semantics across Lua, Java, and Rust with shared parity fixtures — Phase 0 blocker', status: 'Planned' },
-  { title: 'Slack / PagerDuty notifications', desc: 'Wire notification-service beyond structured log placeholder to real push notifications for PENDING_APPROVAL events', status: 'Near' },
-  { title: 'MendrScript Tier 2 opcode registry', desc: 'Governed opcode discovery process and human promotion workflow for extending the closed opcode set', status: 'Partial' },
-  { title: 'Per-tenant warm publish on boot', desc: 'Snapshot republication for all tenants on control-plane startup — documented gap in current implementation', status: 'Gap' },
-  { title: 'gRPC-Web transcoding', desc: 'Envoy transcoder integration in data plane for gRPC-first services behind the gateway', status: 'Planned' },
-  { title: 'Frontend API key management UI', desc: 'Self-service key rotation in operator dashboard without CLI operations', status: 'Optional' },
+  { title: 'Permanent-fix PR suggestions', desc: 'Propose lasting code fixes as pull requests by combining the error signature, service topology, pod logs, and other context Mendr already has.', status: 'Planned' },
+  { title: 'Pruning parity CI', desc: 'Align delete semantics across Lua, Java, and Rust with shared fixtures. Phase 0 blocker.', status: 'Planned' },
+  { title: 'Slack / PagerDuty notifications', desc: 'Real push notifications for pending-approval events beyond structured log placeholders.', status: 'Near' },
+  { title: 'MendrScript Tier 2 opcode registry', desc: 'Governed process for adding new closed opcodes with human promotion.', status: 'Partial' },
+  { title: 'Cluster pod log relay', desc: 'A small Kubernetes service beside the gateway reads application pod logs in that cluster and forwards them to the control plane for richer diagnosis.', status: 'Planned' },
+  { title: 'Anomaly detection across business flows', desc: 'Baseline normal behavior per service pair and flow, then alert on spikes, drops, or inconsistencies before they become incidents. Correlate API signals with outcomes like checkout, payout, and onboarding.', status: 'Planned' },
+  { title: 'gRPC-Web transcoding', desc: 'Envoy transcoder integration for gRPC-first services behind the gateway.', status: 'Planned' },
+  { title: 'Frontend API key management UI', desc: 'Self-service key rotation in the operator dashboard without CLI.', status: 'Optional' },
 ]
 
 const mediumTerm = [
-  { icon: '🔀', title: 'CI contract gates', desc: 'First-class Mendr contract validation in customer CI/CD — Spectral/Pact-like workflows to prevent drift before production. Shift-left plus shift-now.' },
-  { icon: '📊', title: 'Drift dashboard', desc: 'Unified view of OpenAPI-declared versus traffic-observed versus healed-drift endpoints. Leverages topology SCD2 and failure analytics rollups.' },
+  { icon: '🔀', title: 'CI contract gates', desc: 'Mendr contract checks in customer CI/CD, similar to Spectral or Pact, to catch drift before production.' },
+  { icon: '📊', title: 'Drift dashboard', desc: 'One view of declared OpenAPI vs observed traffic vs healed endpoints.' },
   { icon: '🔁', title: 'OpenAPI sync automation', desc: 'Bi-directional sync between service registry and live OpenAPI specs in Git repositories — reducing manual import friction during development cycles.' },
-  { icon: '💬', title: 'Slack/Teams approval workflows', desc: 'Push HITL approval cards to operator channels — accelerating approval latency without bypassing the audit trail.' },
-  { icon: '🌐', title: 'Multi-cluster federation', desc: 'Fleet management for edges across regions/clusters with consistent tenant policy — extends capability-gated sync model to fleet scale.' },
-  { icon: '⚡', title: 'Envoy / Istio sidecar snapshots', desc: 'Compile MendrScript programs for Wasm sidecar enforcement at mesh scale — same semantics, different enforcement surface.' },
+  { icon: '💬', title: 'Slack/Teams approval workflows', desc: 'Approval cards in operator channels without skipping the audit trail.' },
+  { icon: '🌐', title: 'Multi-cluster federation', desc: 'Fleet management for edges across regions with consistent tenant policy.' },
+  { icon: '⚡', title: 'Envoy / Istio sidecar snapshots', desc: 'Compile MendrScript for Wasm sidecar enforcement at mesh scale.' },
 ]
 
 const longTerm = [
-  { title: 'Integration resilience as infrastructure', desc: 'Every API call self-corrects within policy bounds until the permanent fix ships. Integration resilience becomes as assumed as TLS termination.' },
-  { title: 'Cross-tenant anonymized precedent pool', desc: 'Opt-in customers contribute failure signatures that improve diagnosis for all — privacy-gated corpus with network effects. Schema already in Postgres migrations.' },
-  { title: 'Sandboxed Lua shadow lab (Tier 3)', desc: 'Learn candidate primitives off the hot path. Only human-promoted opcodes enter the closed registry. LLM-generated Lua never reaches production.' },
-  { title: 'Opt-in conformal auto-apply', desc: 'Organizations with calibrated trust thresholds enable automatic deploy for narrow confidence bands. Default remains HITL. Calibration data pipeline already in place.' },
+  { title: 'Intelligent control plane for distributed systems', desc: 'Evolve Mendr beyond detect-and-fix into a full intelligent control plane: enforce safe boundaries, guide system behavior, and keep correctness across services in real time. Observability, governance, and runtime intelligence become the layer that keeps complex systems predictable and trustworthy at scale.' },
+  { title: 'Agentic setup over A2A', desc: 'A Mendr setup agent that discovers and talks to a customer platform agent via the open Agent2Agent (A2A) protocol. Together they propose gateway, SDK, and edge installs as GitOps PRs or approval-gated Helm applies under least-privilege RBAC. Manual onboarding shrinks; agents never get open cluster-admin.' },
+  { title: 'eBPF node agent (no sidecars)', desc: 'One agent per node taps sockets and TLS in the Linux kernel via eBPF, parses traffic in userspace, and feeds the same control-plane pipeline. Application pods stay untouched.' },
+  { title: 'Business-logic awareness across services', desc: 'A separate capability that learns how each system is supposed to behave in business terms. When the technical engine is unsure, it can explain why. Teams share upcoming plans (for example scaling for a demand spike); Mendr notifies downstream services that would feel the change so conversations happen before poorly communicated upstream designs force last-minute rewrites.' },
 ]
 
 export default function Roadmap({ navigate }: Props) {
@@ -75,7 +76,7 @@ export default function Roadmap({ navigate }: Props) {
             Roadmap
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            What{"'"}s shipped, what{"'"}s planned, and where we{"'"}re going. Shipped items are verifiable in the current repositories. Roadmap items are explicitly labeled.
+            What is shipped, what is planned, and where we are headed. Shipped items are verifiable and production ready. Roadmap items are labeled as such.
           </p>
         </div>
       </HeroSpotlight>
@@ -137,7 +138,7 @@ export default function Roadmap({ navigate }: Props) {
           <div className="flex items-center gap-3 mb-6">
             <div className="w-3 h-3 rounded-full bg-[#3B82F6]"></div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-xl tracking-tight text-on-surface">Medium-term vision</h2>
-            <span className="text-xs text-dim">Strategic intent — not committed delivery dates</span>
+            <span className="text-xs text-dim">Strategic intent, not committed delivery dates</span>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {mediumTerm.map(item => (
@@ -160,7 +161,7 @@ export default function Roadmap({ navigate }: Props) {
               Long-term vision
             </h2>
             <p className="text-muted max-w-2xl mx-auto">
-              Integration resilience becomes as assumed as TLS termination — not a project, not a runbook step, but infrastructure.
+              Integration resilience should sit under traffic the way TLS termination does: always on, until the permanent fix ships.
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-5">
@@ -181,7 +182,7 @@ export default function Roadmap({ navigate }: Props) {
       <section className="py-14 text-center">
         <div className="max-w-xl mx-auto px-6">
           <h2 className="font-[family-name:var(--font-display)] font-bold text-xl tracking-tight text-on-surface mb-3">
-            What{"'"}s the business case?
+            Measure impact against your incident data
           </h2>
           <p className="text-sm text-dim mb-6">
             Quantify the value Mendr delivers against your own incident data with our ROI framework.

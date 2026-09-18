@@ -25,7 +25,7 @@ const opcodes = [
 ]
 
 const planClasses = [
-  { cls: 'PASSTHROUGH', desc: 'No transform overhead — program is a no-op', strategy: 'Skip entirely' },
+  { cls: 'PASSTHROUGH', desc: 'No transform overhead: the program is a no-op', strategy: 'Skip entirely' },
   { cls: 'PREFILTERABLE', desc: 'Literal pre-scan allows fast-exit miss', strategy: 'Skip transform on miss' },
   { cls: 'FORWARD_ONLY', desc: 'Forward-only structural changes', strategy: 'splice.lua HBM streaming' },
   { cls: 'BOUNDED_WINDOW', desc: 'Bounded streaming window (256KB cap)', strategy: 'splice.lua HBM streaming' },
@@ -40,10 +40,10 @@ export default function MendrScript({ navigate }: Props) {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-4">Technology</div>
           <h1 className="font-[family-name:var(--font-display)] font-bold text-[clamp(2rem,5vw,3.2rem)] leading-[1.15] tracking-tight text-on-surface mb-5">
-            MendrScript — a verified transform DSL
+            MendrScript: a verified transform DSL
           </h1>
           <p className="text-lg text-dim leading-relaxed max-w-2xl mx-auto">
-            A closed-opcode domain-specific language that runs verified, minimized programs at the edge — never raw LLM output, never arbitrary code, never Lua-JIT sandbox risk.
+            MendrScript is a domain-specific language with fixed menu of safe operations that describe a temporary API patch. Programs are verified, minimized, and approved by a person before they run on your gateway.
           </p>
         </div>
       </HeroSpotlight>
@@ -54,17 +54,17 @@ export default function MendrScript({ navigate }: Props) {
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <div>
               <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface mb-4">
-                Why a closed DSL instead of plugins or scripts?
+                Why a fixed language instead of plugins or scripts?
               </h2>
               <p className="text-dim leading-relaxed mb-5">
-                Fixed rule types required Java + Lua + DB enum + consumer branch for every new capability. MendrScript lifts transforms into composable programs while keeping the hot path safe.
+                Older fixed rule types needed code changes in several places for every new capability. MendrScript lets teams compose temporary patches from known operations while keeping live traffic on a safe path.
               </p>
               <div className="space-y-3 mb-6">
                 {[
-                  { icon: '🔒', title: 'No LLM-generated Lua on the edge', desc: 'LuaJIT sandbox is unsafe per 2026 security advisories. MendrScript programs are precompiled JSON with known opcodes — no code generation at the gateway.' },
-                  { icon: '✅', title: 'Tri-runtime parity', desc: 'Java executor, Lua edge interpreter, and Rust minimization oracle share semantics verified by parity fixtures. CI gates enforce cross-runtime equivalence.' },
-                  { icon: '🧮', title: 'Minimization before deployment', desc: 'The Rust sidecar applies ddmin necessity, egg EqSat rewrite rules, and a prove_minimal subsequence search. Programs are as small as provably possible.' },
-                  { icon: '🛡️', title: 'Re-verify on every path', desc: 'Chat-synthesized programs submitted from the UI are re-verified server-side by the Java verifier before staging. The conversation engine cannot bypass safety gates.' },
+                  { icon: '🔒', title: 'No AI-written Lua on the gateway', desc: 'Running generated Lua in a sandbox is a known risk. MendrScript programs arrive as precompiled JSON with known opcodes. The gateway does not generate code at request time.' },
+                  { icon: '✅', title: 'Same meaning in three runtimes', desc: 'Java, the Lua edge interpreter, and the Rust minimizer share the same semantics, checked by parity fixtures and CI.' },
+                  { icon: '🧮', title: 'Shrink before deploy', desc: 'A Rust sidecar removes unnecessary steps (ddmin, egg EqSat, prove_minimal) so each program is as small as it can safely be.' },
+                  { icon: '🛡️', title: 'Re-check on every submit path', desc: 'Programs from chat are re-verified server-side by the inbuilt verifier before staging. The conversation engine cannot bypass safety gates and push a patch live.' },
                 ].map(item => (
                   <div key={item.title} className="flex items-start gap-3.5">
                     <span className="text-xl flex-shrink-0">{item.icon}</span>
@@ -86,21 +86,21 @@ export default function MendrScript({ navigate }: Props) {
                   label: 'Verified MendrScript',
                   status: 'Shipped',
                   statusColor: 'bg-success/20 text-success',
-                  desc: 'Closed opcodes, Java + Lua execution, parity fixtures, CI-verified minimization.',
+                  desc: 'Closed opcodes, Java + Lua execution, parity fixtures, CI-checked minimization.',
                 },
                 {
                   tier: 'Tier 2',
                   label: 'Governed opcode registry',
                   status: 'Partial / Planned',
                   statusColor: 'bg-warning/20 text-warning',
-                  desc: 'Human-promoted new opcodes via formal review process. Extends the closed set without full codebase changes.',
+                  desc: 'New operations enter only after human review. Extends the safe set without a full codebase rewrite.',
                 },
                 {
                   tier: 'Tier 3',
                   label: 'Sandboxed Lua shadow lab',
                   status: 'Planned',
                   statusColor: 'bg-overlay text-dim',
-                  desc: 'Off-hot-path lab learns candidate primitives. Only human-promoted opcodes enter the closed registry. LLM-generated Lua never reaches production.',
+                  desc: 'An off-path lab can explore candidate primitives. Only human-promoted opcodes reach the closed registry. AI-written Lua does not go to production.',
                 },
               ].map(tier => (
                 <div key={tier.tier} className="bg-surface border border-rule rounded-xl p-5">
@@ -125,7 +125,7 @@ export default function MendrScript({ navigate }: Props) {
           <div className="text-center mb-10">
             <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Program Examples</div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">
-              MendrScript programs in practice
+              What a temporary patch looks like
             </h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -216,18 +216,21 @@ ops:
           <div className="text-center mb-10">
             <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Verification Pipeline</div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">
-              VeriGuard-style synthesis loop
+              From proposal to live patch
             </h2>
+            <p className="text-dim mt-3 text-sm max-w-2xl mx-auto">
+              AI can propose. Checks and a person decide what reaches the gateway.
+            </p>
           </div>
           <div className="max-w-3xl mx-auto">
             <div className="flex flex-col gap-3">
               {[
-                { step: 'Propose', detail: 'LLM generates MendrScript AST with closed opcodes from ErrorSignature context', color: 'var(--mendr-sky)', text: 'var(--mendr-sky-ink)' },
-                { step: 'Verify', detail: 'verify_program MCP tool checks structural validity; counterexamples send the loop back to Propose', color: 'var(--mendr-cream)', text: 'var(--mendr-cream-ink)' },
-                { step: 'Simulate', detail: 'simulate_transform runs program against sample request/response payloads; wrong diffs send the loop back', color: '#E8F5E9', text: '#1B5E20' },
-                { step: 'Minimize', detail: 'Rust sidecar applies ddmin necessity, egg EqSat rewrites, prove_minimal; program is as small as provably possible', color: '#EDE9FE', text: '#4C1D95' },
-                { step: 'Safety gate', detail: 'Conformal + Venn-Abers evaluation → PENDING_APPROVAL or (opt-in) APPROVED', color: '#FEE2E2', text: '#D92D20' },
-                { step: 'Deploy', detail: 'Kafka → rule-engine → Postgres → snapshot → edge Redis → live transform at gateway', color: 'var(--mendr-brand)', text: '#FFFFFF' },
+                { step: 'Propose', detail: 'AI drafts a MendrScript program from failure context, using only the closed opcode set', color: 'var(--mendr-sky)', text: 'var(--mendr-sky-ink)' },
+                { step: 'Verify', detail: 'verify_program checks structure; bad programs return to Propose with counterexamples', color: 'var(--mendr-cream)', text: 'var(--mendr-cream-ink)' },
+                { step: 'Simulate', detail: 'simulate_transform runs the program on sample payloads; wrong diffs return to Propose', color: '#E8F5E9', text: '#1B5E20' },
+                { step: 'Minimize', detail: 'Rust sidecar applies ddmin, egg EqSat, and prove_minimal so the program stays as small as provably possible', color: '#EDE9FE', text: '#4C1D95' },
+                { step: 'Safety gate', detail: 'Confidence checks decide PENDING_APPROVAL, or APPROVED only when opt-in auto-apply is enabled and calibrated', color: '#FEE2E2', text: '#D92D20' },
+                { step: 'Deploy', detail: 'After approval: stream the rule to database to create snapshot to edge cache, then live on the gateway', color: 'var(--mendr-brand)', text: '#FFFFFF' },
               ].map((item, i) => (
                 <div key={item.step} className="flex items-start gap-4">
                   <div className="flex flex-col items-center">
@@ -258,6 +261,9 @@ ops:
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">
               Complete initial opcode set
             </h2>
+            <p className="text-dim mt-3 text-sm max-w-2xl">
+              These are the building blocks of a temporary patch. New ones enter only through governed review.
+            </p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -270,7 +276,7 @@ ops:
                 </tr>
               </thead>
               <tbody>
-                {opcodes.map((row, i) => (
+                {opcodes.map((row) => (
                   <tr key={row.op} className={`border-b border-overlay hover:bg-canvas transition-colors`}>
                     <td className="px-4 py-3 font-mono text-xs font-semibold text-brand bg-[#F0F4FF]">{row.op}</td>
                     <td className="px-4 py-3">
@@ -298,10 +304,10 @@ ops:
           <div className="mb-8">
             <div className="text-xs font-semibold text-dim uppercase tracking-widest mb-3">Edge Execution</div>
             <h2 className="font-[family-name:var(--font-display)] font-bold text-2xl tracking-tight text-on-surface">
-              Plan classes — how programs execute at the edge
+              How programs execute at the edge
             </h2>
             <p className="text-dim mt-3 text-sm max-w-2xl">
-              Programs are classified at the edge into five execution tiers. Streaming splice is preferred for structural ops; DOM buffering handles complex transformations.
+              Each program is classified into one of five execution tiers. Simple structural changes prefer streaming; complex ones buffer the body.
             </p>
           </div>
           <div className="space-y-3">
@@ -331,7 +337,7 @@ ops:
             How does safety govern all of this?
           </h2>
           <p className="text-sm text-cream-ink/75 mb-6">
-            MendrScript programs must pass the safety gate before any edge deployment. Human-in-the-loop is a structural guarantee — not a configuration option.
+            MendrScript programs must pass the safety gate before any edge deployment. Human-in-the-loop is a structural guarantee and not a configuration option.
           </p>
           <button onClick={() => navigate('safety')} className="bg-brand text-white font-semibold px-7 py-3.5 rounded-lg hover:bg-brand-dark transition-colors text-sm">
             Explore safety & trust

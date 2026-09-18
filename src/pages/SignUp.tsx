@@ -81,7 +81,7 @@ export default function SignUp({ navigate }: Props) {
 
   return (
     <div className="min-h-[calc(100vh-60px)] grid lg:grid-cols-2">
-      {/* Left — steps panel */}
+      {/* Left: steps panel */}
       <div className="hidden lg:flex flex-col bg-ink px-14 py-16 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 -left-20 w-96 h-96 rounded-full bg-brand/20 blur-[100px]"></div>
@@ -113,7 +113,7 @@ export default function SignUp({ navigate }: Props) {
               {[
                 { num: 1, title: 'Account details', desc: 'Name, email, and company' },
                 { num: 2, title: 'Password & plan', desc: 'Secure your account and choose deployment' },
-                { num: 3, title: 'Connect your first service', desc: "Import an OpenAPI spec or mendr.yaml — you're ready to go" },
+                { num: 3, title: 'Connect your first service', desc: "Import an OpenAPI spec or mendr.yaml and you're ready to go" },
               ].map(s => (
                 <div key={s.num} className="flex items-start gap-4">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 transition-all
@@ -137,8 +137,8 @@ export default function SignUp({ navigate }: Props) {
           <div className="mt-10 border-t border-white/10 pt-8 flex flex-col gap-3">
             {[
               { icon: '🔒', text: 'SOC 2 Type II compliant' },
-              { icon: '🛡️', text: 'FORCE RLS multi-tenant isolation' },
-              { icon: '📋', text: 'HITL by default — AI never auto-deploys' },
+              { icon: '🛡️', text: 'Customer data isolated by tenant' },
+              { icon: '📋', text: 'Human approval by default; AI never auto-deploys' },
             ].map(item => (
               <div key={item.text} className="flex items-center gap-2.5 text-xs text-muted">
                 <span>{item.icon}</span>
@@ -149,7 +149,7 @@ export default function SignUp({ navigate }: Props) {
         </div>
       </div>
 
-      {/* Right — form panel */}
+      {/* Right: form panel */}
       <div className="flex items-center justify-center px-6 py-14 bg-canvas">
         <div className="w-full max-w-[420px]">
           {/* Mobile logo */}
@@ -176,7 +176,7 @@ export default function SignUp({ navigate }: Props) {
               {step === 1 ? 'Create your account' : 'Secure your account'}
             </h1>
             <p className="text-sm text-dim mt-1">
-              {step === 1 ? 'Start your Mendr journey — free to evaluate.' : 'Choose a strong password and your deployment model.'}
+              {step === 1 ? 'Free to evaluate. Start with your account details.' : 'Choose a strong password and your deployment model.'}
             </p>
           </div>
 
